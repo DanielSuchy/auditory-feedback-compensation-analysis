@@ -40,6 +40,6 @@ end
 function f0s = extract_f0(audio)
     sample_rate = 16000;
     for i = 1:length(audio)
-        f0s{i} = pitch(audio{i}, sample_rate);
+        f0s{i} = pitch(audio{i}, sample_rate, Method="PEF");
     end
 end
