@@ -5,16 +5,22 @@ clear;
 
 %do the same thing for every participant
 all_files = dir("main/**/*PertrurbExpPilot.mat");
+all_f0s = table();
 for i = 1:length(all_files)
     participant_filename = cat(2, all_files(i).folder, '\', all_files(i).name);
     audio = load_audio(participant_filename);
     filtered_audio = lowpass_filter(audio);
-    f0s = extract_f0(filtered_audio);
-    f0s = transpose(f0s); % store each observation in new row
+    f0 = extract_f0(filtered_audio);
+    f0 = transpose(f0); % store each observation in new row
     
-    name = cat(2, all_files(i).folder, '\', all_files(i).name(1:2), '_f0.mat');
-    save(name, 'f0s');
+    % save results for all participants in a single table
+    participant = all_files(i).name(1:2);
+    participant = repmat(participant, [length(audio), 1]);
+    f0 = table(participant, f0);
+    all_f0s = [all_f0s; f0];
 end
+
+save("main\all_f0s.mat", 'all_f0s');
 
 %load vocalizations from every trial into one variable
 function audio = load_audio(filename)
