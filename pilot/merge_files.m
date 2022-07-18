@@ -18,6 +18,6 @@ end
 %merge data types, give pretty names, remove empty columns
 all_data = [all_response_data all_audio_data];
 all_data = removevars(all_data, {'block', 'confidence_response'});
-all_data = renamevars(all_data, ["ID", "Var9", "OST_worked"], ["participant", "audio", "ost_worked"]);
+all_data = renamevars(all_data, ["ID", "Var9", "OST_worked"], ["participant", "audapter_data", "ost_worked"]);
 
 save('main\all_data.mat', "all_data");

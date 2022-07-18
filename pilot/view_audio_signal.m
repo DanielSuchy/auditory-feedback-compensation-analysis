@@ -2,8 +2,9 @@
 %for analysis
 clear;
 
-data = load('F:\materialy\thesis\analysis\pilot\main\S1\S1_F0.mat');
-data = data.f0s(4); % select trial number here
+data = load('main\all_data.mat');
+data = data.all_data;
+data = data.f0(5); % select trial number here
 data = data{1};
 
 time_points = 1:length(data);
