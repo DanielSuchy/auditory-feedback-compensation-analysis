@@ -10,6 +10,7 @@ for i = 1:length(all_files)
     audio = load_audio(participant_filename);
     filtered_audio = lowpass_filter(audio);
     f0s = extract_f0(filtered_audio);
+    f0s = transpose(f0s); % store each observation in new row
     
     name = cat(2, all_files(i).folder, '\', all_files(i).name(1:2), '_f0.mat');
     save(name, 'f0s');
