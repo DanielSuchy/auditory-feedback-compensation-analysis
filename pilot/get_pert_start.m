@@ -27,8 +27,13 @@ for trial = 1:height(audapter_data)
     
     %calculate perturbation start and end
     pert_time_points = t_axis(ost_status == ost_pert_flag); %select time-points with ongoing pert
-    pert_start_time = pert_time_points(1);
-    pert_end_time = pert_time_points(end);
+    if length(pert_time_points) > 1
+        pert_start_time = pert_time_points(1);
+        pert_end_time = pert_time_points(end);
+    else % no vocalization during this trial or ost failed
+        pert_start_time = nan;
+        pert_end_time = nan;
+    end
 
     f0 = f0_data(trial);
     f0_data_labeled = [f0_data_labeled; table(pert_start_time, pert_end_time)];
@@ -37,4 +42,5 @@ end
 %save the file
 all_data = [all_data, f0_data_labeled];
 save("main\all_data.mat", "all_data");
+disp("calculated pert start and end");
 

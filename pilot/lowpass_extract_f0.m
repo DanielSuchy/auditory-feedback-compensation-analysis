@@ -5,7 +5,6 @@ clear;
 
 all_data = load('main\all_data.mat');
 all_data = all_data.all_data;
-all_data = all_data(1:10, :);
 audapter_data = all_data.audapter_data;
 audio = transpose({audapter_data(:).signalIn});
 filtered_audio = lowpass_filter(audio);
@@ -15,6 +14,7 @@ f0 = transpose(f0); % store each observation in new row
 
 all_data = [all_data table(f0)];
 save('main\all_data.mat', "all_data");
+disp('extracted F0');
 
 %lowpass-filter audio at 500Hz
 function filtered_audio = lowpass_filter(audio)

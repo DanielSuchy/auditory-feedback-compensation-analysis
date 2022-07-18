@@ -21,3 +21,4 @@ all_data = removevars(all_data, {'block', 'confidence_response'});
 all_data = renamevars(all_data, ["ID", "Var9", "OST_worked"], ["participant", "audapter_data", "ost_worked"]);
 
 save('main\all_data.mat', "all_data");
+disp('merged all data into a single file');
