@@ -19,3 +19,4 @@ end
 
 %save the data
 save('main\all_data.mat', 'all_data');
+disp('calculated mean and stdev of F0 before the pert')

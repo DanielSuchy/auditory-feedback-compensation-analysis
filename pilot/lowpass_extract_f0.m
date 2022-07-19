@@ -8,11 +8,12 @@ all_data = all_data.all_data;
 audapter_data = all_data.audapter_data;
 audio = transpose({audapter_data(:).signalIn});
 filtered_audio = lowpass_filter(audio);
-f0 = extract_f0(filtered_audio);
+[f0, f0_time_points] = extract_f0(filtered_audio);
 f0 = transpose(f0); % store each observation in new row
+f0_time_points = transpose(f0_time_points);
 
 
-all_data = [all_data table(f0)];
+all_data = [all_data table(f0) table(f0_time_points)];
 save('main\all_data.mat', "all_data");
 disp('extracted F0');
 
@@ -26,9 +27,9 @@ function filtered_audio = lowpass_filter(audio)
 end
 
 %extract the fundamental frequency
-function f0s = extract_f0(audio)
+function [f0s, timepoints] = extract_f0(audio)
     sample_rate = 16000;
     for i = 1:length(audio)
-        f0s{i} = pitch(audio{i}, sample_rate, Method="PEF");
+        [f0s{i}, timepoints{i}] = pitch(audio{i}, sample_rate, Method="PEF");
     end
 end
