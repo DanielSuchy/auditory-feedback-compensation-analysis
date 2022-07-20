@@ -4,10 +4,10 @@ clear;
 
 data = load('main\all_data.mat');
 data = data.all_data;
-data = data.f0(5); % select trial number here
-data = data{1};
+f0 = data.f0(800); % select trial number here
+f0 = f0{1};
 
-time_points = 1:length(data);
+time_points = 1:length(f0);
 
 figure;
-plot(time_points, data)
+plot(time_points, f0)
