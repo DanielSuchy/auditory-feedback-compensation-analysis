@@ -22,6 +22,10 @@ for i = 1:height(all_data)
     time(time >= current_trial.pert_start_time) = []; %remove time points after pert
     f0_before_pert = f0(1:length(time)); % F0 is estimated for each timepoint
 
+    goal_time = time(end) - 1;
+    time(time < goal_time) = [];
+    f0_before_pert = f0_before_pert(length(f0_before_pert) - length(time) + 1: end);
+
     all_data(i, :).mean_f0_before_pert = mean(f0_before_pert);
     all_data(i, :).stdev_f0_before_pert = std(f0_before_pert);
 end

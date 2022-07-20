@@ -4,6 +4,7 @@ all_data = load('main\all_data.mat');
 all_data = all_data.all_data;
 all_data.mean_f0_after_pert = nan([height(all_data), 1]);
 all_data.meets_2sd_condition = zeros([height(all_data), 1]);
+all_data.mean_f0_during_condition = nan([height(all_data), 1]);
 all_data.difference_in_cents = nan([height(all_data), 1]);
 
 %all_data = all_data(796, :);
@@ -48,6 +49,7 @@ for trial_id = 1:height(all_data)
             condition_start_end = meets_condition_table(i:j,:);
             % check is stop -> end interval is at least 120 ms
             if height(condition_start_end) > 1 && (condition_start_end(end,2) - condition_start_end(1,2) > 0.120)
+                all_data(trial_id, :).mean_f0_during_condition = mean(condition_start_end(:,1));
                 all_data(trial_id, :).meets_2sd_condition = true;
                 all_data(trial_id, :).difference_in_cents = 100 * ((10 * log(mean(condition_start_end(:, 1)) / all_data.mean_f0_before_pert(trial_id, :))) / log(2));
                 break;

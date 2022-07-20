@@ -9,3 +9,4 @@ lowpass_extract_f0;
 trim_f0;
 get_pert_start;
 get_mean_sd_f0;
+get_f0_after_pert;
