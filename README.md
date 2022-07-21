@@ -8,3 +8,4 @@ notes regarding the result:
 46 % of trials with perturbation meet the condition
 fisher's exact test - trials with pert significantly more likely to meet the condition
 74% of reactions are following, 26 are opposing
+participant are usually aware even of the lowest pertrubations
