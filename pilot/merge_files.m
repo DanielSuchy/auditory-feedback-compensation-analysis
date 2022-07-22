@@ -20,5 +20,5 @@ all_data = [all_response_data all_audio_data];
 all_data = removevars(all_data, {'block', 'confidence_response'});
 all_data = renamevars(all_data, ["ID", "Var9", "OST_worked"], ["participant", "audapter_data", "ost_worked"]);
 
-save('main\all_data.mat', "all_data");
+save('main\all_data.mat', "all_data", '-v7.3');
 disp('merged all data into a single file');

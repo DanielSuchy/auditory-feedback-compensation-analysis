@@ -41,6 +41,6 @@ end
 
 %save the file
 all_data = [all_data, f0_data_labeled];
-save("main\all_data.mat", "all_data");
+save("main\all_data.mat", "all_data", '-v7.3');
 disp("calculated pert start and end");
 

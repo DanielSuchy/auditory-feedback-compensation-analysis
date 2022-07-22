@@ -8,5 +8,5 @@ all_data(all_data.ost_worked == 0, :) = [];
 all_data(isnan(all_data.pert_start_time), :) = [];
 
 
-save('main\all_data.mat', 'all_data');
+save('main\all_data.mat', 'all_data', '-v7.3');
 disp('Removed faulty trials');

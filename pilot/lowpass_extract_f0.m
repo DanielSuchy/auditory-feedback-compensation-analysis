@@ -14,7 +14,7 @@ f0_time_points = transpose(f0_time_points);
 
 
 all_data = [all_data table(f0) table(f0_time_points)];
-save('main\all_data.mat', "all_data");
+save('main\all_data.mat', "all_data", '-v7.3');
 disp('extracted F0');
 
 %lowpass-filter audio at 500Hz

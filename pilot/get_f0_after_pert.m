@@ -58,5 +58,5 @@ for trial_id = 1:height(all_data)
     end
 end
 
-save("main\all_data.mat", "all_data");
+save("main\all_data.mat", "all_data", '-v7.3');
 disp("calculated F0 after pert");

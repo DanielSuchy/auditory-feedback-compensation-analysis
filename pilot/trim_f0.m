@@ -21,5 +21,5 @@ for i = 1:height(all_data)
     all_data.f0_time_points{i} = time_points_result;
 end
 
-save('main\all_data.mat', 'all_data');
+save('main\all_data.mat', 'all_data', '-v7.3');
 disp('Trimmed F0 signal');

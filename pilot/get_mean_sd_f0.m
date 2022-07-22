@@ -31,5 +31,5 @@ for i = 1:height(all_data)
 end
 
 %save the data
-save('main\all_data.mat', 'all_data');
+save('main\all_data.mat', 'all_data', '-v7.3');
 disp('calculated mean and stdev of F0 before the pert')
