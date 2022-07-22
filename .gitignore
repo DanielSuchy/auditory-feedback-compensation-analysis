@@ -1,1 +1,3 @@
 *.mat
+pilot/fitPsycheCurveLogit.m
+pilot/main/S5/change_participant_id.m
