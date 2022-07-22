@@ -15,11 +15,11 @@ end
 p1 = behavior_data(behavior_data.ID == 1 & behavior_data.pert_type == 1, :);
 p2 = behavior_data(behavior_data.ID == 2 & behavior_data.pert_type == 1, :);
 p3 = behavior_data(behavior_data.ID == 3 & behavior_data.pert_type == 1, :);
-p4 = behavior_data(behavior_data.ID == 4 & behavior_data.pert_type == 1, :);
+p4 = behavior_data(behavior_data.ID == 3 & behavior_data.pert_type == 1, :);
+p6 = behavior_data(behavior_data.ID == 3 & behavior_data.pert_type == 1, :);
 p1n = behavior_data(behavior_data.ID == 1 & behavior_data.pert_type == -1, :);
 p2n = behavior_data(behavior_data.ID == 2 & behavior_data.pert_type == -1, :);
 p3n = behavior_data(behavior_data.ID == 3 & behavior_data.pert_type == -1, :);
-p4n = behavior_data(behavior_data.ID == 4 & behavior_data.pert_type == -1, :);
 
 figure;
 subplot(2,1,1)
@@ -27,7 +27,6 @@ plot(p1.trial, p1.pert_magnitude, '-o')
 hold on
 plot(p2.trial, p2.pert_magnitude, '-o')
 plot(p3.trial, p3.pert_magnitude, '-o')
-plot(p4.trial, p4.pert_magnitude, '-o')
 hold off
 title('Upward perturbation staircase by participant')
 xlabel('trial')
@@ -39,7 +38,6 @@ plot(p1n.trial, p1n.pert_magnitude, '-o')
 hold on
 plot(p2n.trial, p2n.pert_magnitude, '-o')
 plot(p3n.trial, p3n.pert_magnitude, '-o')
-plot(p4n.trial, p4n.pert_magnitude, '-o')
 hold off
 title('Downward perturbation staircase by participant')
 xlabel('trial')
