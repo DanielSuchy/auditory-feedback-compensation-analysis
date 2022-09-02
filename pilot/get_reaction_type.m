@@ -35,6 +35,16 @@ meets_condition_false = [sum(comparision.trial_type == 0); sum(comparision.trial
 contingency_t = table(trial_types, meets_condition_true, meets_condition_false);
 [h,p,stats] = fishertest(contingency_t(:,2:3));
 
+%classify data as aware/unaware
+%how many aware vs. unaware trials meet the 2sd condition
+valid_data.aware = valid_data.how_noticeable_response > 0;
+aware_data = valid_data(valid_data.aware == 1, :);
+unaware_data = valid_data(valid_data.aware == 0, :);
+aware_meets_condition = aware_data(aware_data.meets_2sd_condition == 1, :);
+unaware_meets_condition = unaware_data(unaware_data.meets_2sd_condition == 1, :);
+100*(height(aware_meets_condition) / height(aware_data))
+100*(height(unaware_meets_condition) / height(unaware_data))
+
 %assign type of response to each trial with reaction
 valid_data = valid_data_with_react;
 valid_data.reaction_type = strings([height(valid_data), 1]);
