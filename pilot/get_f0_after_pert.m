@@ -16,7 +16,7 @@ for trial_id = 1:height(all_data)
     time_pitch = (time_points - 1)/sample_rate;
     f0 = trial.f0{1};
     pert_start = trial.pert_start_time;
-    reaction_time = 0.060; %60 miliseconds, based on Hafke's paper 
+    reaction_time = 0.060; %60 miliseconds, based on Hafke's paper
     
     %get F0 values after the pert start + latency
     time_pitch(time_pitch < pert_start + reaction_time) = [];

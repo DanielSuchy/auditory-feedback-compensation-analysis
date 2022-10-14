@@ -35,6 +35,13 @@ for trial = 1:height(audapter_data)
         pert_end_time = nan;
     end
 
+    %the perturbation needs to last at least 850 ms, otherwise the trial is
+    %not valid (800ms for pert calculation, 50 ms for phonation ending)
+    if pert_end_time - pert_start_time < 0.850
+        pert_start_time = nan;
+        pert_end_time = nan;
+    end
+
     f0 = f0_data(trial);
     f0_data_labeled = [f0_data_labeled; table(pert_start_time, pert_end_time)];
 end

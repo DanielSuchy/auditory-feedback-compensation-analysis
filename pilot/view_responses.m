@@ -34,11 +34,11 @@ for i = 1:length(unique(data.participant))
     stdev_aware = accumarray(n, participant.aware, [], @(x)  std(x));
     pitch_shift = categorical(pitch_shift);
 
-    subplot(6,2,figure_position)
+    subplot(7,2,figure_position)
     errorbar(pitch_shift, mean_response, stdev_response)
     figure_position = figure_position + 1;
 
-    subplot(6,2,figure_position)
+    subplot(7,2,figure_position)
     errorbar(pitch_shift, mean_aware, stdev_aware)
     figure_position = figure_position + 1;
 end

@@ -45,6 +45,17 @@ unaware_meets_condition = unaware_data(unaware_data.meets_2sd_condition == 1, :)
 100*(height(aware_meets_condition) / height(aware_data))
 100*(height(unaware_meets_condition) / height(unaware_data))
 
+%difference between the aware and unaware
+%H1 = aware trials are more likely to meet the 2sd condition
+%H0 = there is no such difference
+comparision = table(valid_data.aware, valid_data.meets_2sd_condition);
+comparision = renamevars(comparision, {'Var1', 'Var2'}, {'aware', 'meets_condition'});
+[aware, ~, n] = unique(comparision.aware);
+meets_condition_true = accumarray(n, comparision.meets_condition, [], @(x)  sum(x));
+meets_condition_false = [sum(comparision.aware == 0); sum(comparision.aware == 1)] - meets_condition_true;
+contingency_t = table(aware, meets_condition_true, meets_condition_false);
+[h,p,stats] = fishertest(contingency_t(:,2:3));
+
 %assign type of response to each trial with reaction
 valid_data = valid_data_with_react;
 valid_data.reaction_type = strings([height(valid_data), 1]);
