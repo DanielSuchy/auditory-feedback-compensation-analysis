@@ -14,7 +14,7 @@ participant_folders = files([files.isdir]);
 %run the pipeline
 for participant = 1:length(participant_folders)
     path = [participant_folders(participant).folder '/' participant_folders(participant).name];
-    participant_id = participant_folders(participant).name(1:2);
+    participant_id = extractBefore(participant_folders(participant).name, '-');
     if strcmp(participant_id, 'S1') || strcmp(participant_id, 'S3') || strcmp(participant_id, 'S5') || strcmp(participant_id, 'S7')
         continue %skip this participant for now (EEG trigger codes were different)
     end
@@ -24,7 +24,7 @@ for participant = 1:length(participant_folders)
     %rename_triggers;
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %mark_vocal_onset;
-    cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
-    preprocess;
+    %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
+    %preprocess;
 end
 
