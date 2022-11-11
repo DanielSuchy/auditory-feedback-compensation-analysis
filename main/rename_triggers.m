@@ -1,9 +1,11 @@
 %rename eeg trigger codes to human-redable names to make preprocessing & analysis easier
-clear all;
-close all;
 
-%load the data
-set_file = '../../eeg_data/main/eeg/S6-2022-10-24T183712/S6.set';
+%load the data individually
+%set_file = '../../eeg_data/main/eeg/S6-2022-10-24T183712/S6.set';
+%or do batch processing
+set_file = [path '/' participant_id '.set'];
+
+
 EEG = pop_loadset(set_file);
 
 %rename
@@ -35,9 +37,8 @@ for i = 1:length(events)
     events(i).type = new_name;
 end
 
-events.type
-
 %save
 EEG.event = events;
-savename = '../../eeg_data/main/eeg/S6-2022-10-24T183712/S6_renamed.set';
+savename = [path '/' participant_id '_renamed.set'];
 EEG = pop_saveset(EEG, 'filename',savename);
+disp('Renamed triggers to human-readable format')

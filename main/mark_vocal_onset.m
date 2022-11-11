@@ -1,9 +1,10 @@
-%mark where the vocalization starts in each epoch
-clear all;
-close all;
+%mark where the vocalization and the perturbations starts in each epoch
 
-%load the data
-set_file = '../../eeg_data/main/eeg/S6-2022-10-24T183712/S6_renamed.set';
+%load the data individually
+%set_file = '../../eeg_data/main/eeg/S1-2022-10-03T174648/S1_renamed.set';
+%or do batch processing
+set_file = [path '/' participant_id '_renamed.set'];
+
 EEG = pop_loadset(set_file);
 
 %extract the audio
@@ -171,6 +172,6 @@ end
 fprintf('number of modified marker names: %i', counter)
 fprintf('\n')
 
-savename = '../../eeg_data/main/eeg/S6-2022-10-24T183712/S6_perts.set';
+savename = [path '/' participant_id '_perts.set'];
 EEG = pop_saveset(EEG, 'filename',savename);
-
+disp('added perturbation onset to set files')
