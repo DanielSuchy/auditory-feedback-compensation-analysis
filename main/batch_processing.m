@@ -18,12 +18,12 @@ for participant = 1:length(participant_folders)
     if strcmp(participant_id, 'S1') || strcmp(participant_id, 'S3') || strcmp(participant_id, 'S5')
         continue %skip this participant for now (EEG trigger codes were different)
     end
-    cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
-    read_merge_eeg;
+    %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
+    %read_merge_eeg;
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %rename_triggers;
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %mark_vocal_onset;
-    %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
-    %preprocess;
+    cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
+    preprocess;
 end

@@ -1,16 +1,23 @@
 %mark where the vocalization and the perturbations starts in each epoch
 
 %load the data individually
-%set_file = '../../eeg_data/main/eeg/S1-2022-10-03T174648/S1_renamed.set';
+set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S3-2022-10-19T181048/S3_renamed.set';
+participant_id = 'S3';
 %or do batch processing
-set_file = [path '/' participant_id '_renamed.set'];
+%set_file = [path '/' participant_id '_renamed.set'];
 
 EEG = pop_loadset(set_file);
+
+%certain participants have audio issues
+%scan these using the figure below
+%and remove them using the following code
+if strcmp(participant_id, 'S5')
+    EEG = pop_select( EEG, 'time',[800 EEG.xmax] );
+end
 
 %extract the audio
 EEG_audio = pop_select( EEG ,'channel',{'audio'});
 original_markers_n = length(EEG.event);
-
 
 %% plot trigger markers and audiodata
 set(0,'defaultAxesFontSize',16)
@@ -19,11 +26,11 @@ time_seconds = linspace(1, (size(EEG_audio.data, 2)*(sample_length)./1000), size
 figure;
 plot(time_seconds, abs(EEG_audio.data), 'k','LineWidth', 1)
 for e = 1:length(EEG.event)
-    if strcmp(EEG.event(e).type, '1')
+    if strcmp(EEG.event(e).type, 'noperttrial')
         line([EEG.event(e).latency*sample_length./1000 EEG.event(e).latency*sample_length./1000], [2000 -2000], 'Color', 'green', 'LineWidth', 3)
-    elseif strcmp(EEG.event(e).type,'2') || strcmp(EEG.event(e).type,'2')
+    elseif strcmp(EEG.event(e).type,'bigperttrial') || strcmp(EEG.event(e).type,'2')
         line([EEG.event(e).latency*sample_length./1000 EEG.event(e).latency*sample_length./1000], [2000 -2000], 'Color', 'blue', 'LineWidth', 3)
-    elseif strcmp(EEG.event(e).type,'3') || strcmp(EEG.event(e).type,'3')
+    elseif strcmp(EEG.event(e).type,'perttrial') || strcmp(EEG.event(e).type,'3')
         line([EEG.event(e).latency*sample_length./1000 EEG.event(e).latency*sample_length./1000], [2000 -2000], 'Color', 'red', 'LineWidth', 3)
     end
 end
@@ -115,7 +122,6 @@ while i < length(audiodata_bin) % loop over each sample
     else
         i = i+1;
     end
-    
 end
 fprintf('added markers/trials: %i/%i', onsetsdetected-1, count)
 fprintf('\n')
