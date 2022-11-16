@@ -24,6 +24,8 @@ for participant = 1:length(participant_folders)
     %rename_triggers;
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %mark_vocal_onset;
+    %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
+    %preprocess;
     cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
-    preprocess;
+    extract_erps;
 end

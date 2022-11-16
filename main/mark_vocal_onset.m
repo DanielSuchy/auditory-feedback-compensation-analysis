@@ -1,10 +1,10 @@
 %mark where the vocalization and the perturbations starts in each epoch
 
 %load the data individually
-set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S3-2022-10-19T181048/S3_renamed.set';
-participant_id = 'S3';
+%set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S6-2022-10-24T183712/S6_renamed.set';
+%participant_id = 'S6';
 %or do batch processing
-%set_file = [path '/' participant_id '_renamed.set'];
+set_file = [path '/' participant_id '_renamed.set'];
 
 EEG = pop_loadset(set_file);
 
@@ -148,8 +148,7 @@ for e = 1:original_markers_n % loop over original markers
         elseif strcmp(EEG.event(e).type, 'bigperttrial') % big pert control trial
             perturbation_present = 1;
         elseif strcmp(EEG.event(e).type, 'perttrial') % critical trial
-            continue %skip critical trials for now
-            %perturbation_present = 1;     
+            perturbation_present = 2;     
         else
             error('something wrong')
         end
@@ -160,11 +159,23 @@ for e = 1:original_markers_n % loop over original markers
             if (EEG.event(i).latency > trial_start_latency) && (EEG.event(i).latency < response_latency)
                 counter = counter + 1;
                 
-                if perturbation_present
+                if perturbation_present == 1
                     new_event_idx = n_markers+counter;
                     EEG.event(new_event_idx) = EEG.event(i);
                     EEG.event(new_event_idx).type = 'PertOnset'; 
-                    EEG.event(new_event_idx).latency = EEG.event(i).latency + perturbation_delay; 
+                    EEG.event(new_event_idx).latency = EEG.event(i).latency + perturbation_delay;
+                elseif perturbation_present == 2
+                    awareness = EEG.event(e+3).type;
+                    if strcmp(awareness, 'awareness0')
+                        awareness = 'unaware';
+                    else
+                        awareness = 'aware';
+                    end
+                    pert_type = ['PertOnset_' awareness];
+                    new_event_idx = n_markers+counter;
+                    EEG.event(new_event_idx) = EEG.event(i);
+                    EEG.event(new_event_idx).type = pert_type; 
+                    EEG.event(new_event_idx).latency = EEG.event(i).latency + perturbation_delay;
                 else
                     new_event_idx = n_markers+counter;
                     EEG.event(new_event_idx) = EEG.event(i);
