@@ -5,7 +5,7 @@
 %path = '/Users/diskuser/analysis/eeg_data/main/eeg/S7-2022-10-26T103854';
 %participant_id = 'S7';
 %or do batch processing
-set_file = [path '/' participant_id '_preprocessed.set'];
+set_file = [path '/' participant_id '_ica.set'];
 
 EEG = pop_loadset(set_file);
 
@@ -26,13 +26,6 @@ savename = [path '/' participant_id '_voice_onset_eeg.mat'];
 save(savename, "EEG_voice_onset");
 
 %% Perturbation onset - bigpert vs nopert
-%see if there are both types of trials, if not, skip this participant
-events = struct2table(EEG.event);
-unaware_trials_n = sum(strcmp(events.type, 'PertOnset_unaware'));
-if unaware_trials_n == 0
-    return;
-end
-
 % epoch, baseline removal, and artifact rejection
 EEG_pert_onset = pop_epoch( EEG, {  'PertOnset'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
 EEG_pert_onset = pop_rmbase( EEG_pert_onset, [-500 0]);
@@ -59,6 +52,13 @@ savename = [path '/' participant_id '_nopert_onset_eeg.mat'];
 save(savename, "EEG_nopert_onset");
 
 %% Perturbation onset - aware vs unaware
+%see if there are both types of trials, if not, skip this participant
+events = struct2table(EEG.event);
+unaware_trials_n = sum(strcmp(events.type, 'PertOnset_unaware'));
+if unaware_trials_n == 0
+    return;
+end
+
 EEG_aware_onset = pop_epoch( EEG, {  'PertOnset_aware'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
 EEG_aware_onset = pop_rmbase( EEG_aware_onset, [-500 0]);
 EEG_unaware_onset = pop_epoch( EEG, {  'PertOnset_unaware'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');

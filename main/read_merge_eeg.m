@@ -38,3 +38,5 @@ else %multiple sessions/blocks
     
     all_eeg = pop_saveset(all_eeg, 'filename', strcat(participant_id,'.set'));
 end
+
+disp(['Extracted and merged data for participant ', participant_id]);
