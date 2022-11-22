@@ -1,10 +1,10 @@
 %mark where the vocalization and the perturbations starts in each epoch
 
 %load the data individually
-%set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S6-2022-10-24T183712/S6_renamed.set';
-%participant_id = 'S6';
+set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S6-2022-10-24T183712/S6_renamed.set';
+participant_id = 'S6';
 %or do batch processing
-set_file = [path '/' participant_id '_renamed.set'];
+%set_file = [path '/' participant_id '_renamed.set'];
 
 EEG = pop_loadset(set_file);
 
@@ -129,8 +129,32 @@ fprintf('\n')
 set(0,'DefaultFigureWindowStyle','normal')
 set(0,'defaultAxesFontSize',12)
 
+%% Correct trials where the voice onset happens before audapter start
+%find out what event follows each voice onset
+events = struct2table(EEG.event);
+events = sortrows(events, 'latency');
+next_events = events(2:end, 1:2);
+type = 0;
+latency = 0;
+next_events = [next_events; table(type, latency)];
+events.next_event = next_events.type;
+events.next_latency = next_events.latency + 1;
+
+%voice_onset should be followed by audapterstart (see below) or audapter end (usually); if not it needs to be excluded
+latencies_to_delete = events(strcmp(events.type, 'voice_onset') & ~(strcmp(events.next_event, 'audapterstart') | strcmp(events.next_event, 'audapterend')), :).latency;
+%sometimes, the participant starts phonation sooner that audapter starts (voice_onset -> audapterstart)
+%but the perturbation cannot start sooner than the minimal preset limit (1.5s) after audapterstart
+%in this case voice onset should be moved to audapter start in order to correctly assign pert start
+%remove this option when viewing voice onset ERPs
+latencies_to_change = events(strcmp(events.type, 'voice_onset') & strcmp(events.next_event, 'audapterstart'), [1 5]);
+
+new_events = struct2table(EEG.event);
+new_events(ismember(new_events.latency, latencies_to_delete), :) = [];
+new_events(ismember(new_events.latency, latencies_to_change.latency), :).latency = latencies_to_change.next_latency;
+EEG.event = table2struct(new_events);
+
 %% Mark perturbation onset for each trial/condition... 
-perturbation_delay = 1500 % in milliseconds
+perturbation_delay = 1500; % in milliseconds
 perturbation_delay = perturbation_delay ./ sample_length; % in samples
 
 counter = 0;
@@ -158,7 +182,6 @@ for e = 1:original_markers_n % loop over original markers
         for i = original_markers_n:n_markers % loop over newly added voice-onset markers
             if (EEG.event(i).latency > trial_start_latency) && (EEG.event(i).latency < response_latency)
                 counter = counter + 1;
-                
                 if perturbation_present == 1
                     new_event_idx = n_markers+counter;
                     EEG.event(new_event_idx) = EEG.event(i);
