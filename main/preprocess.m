@@ -1,8 +1,9 @@
 %load the data individually
-%set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S6-2022-10-24T183712/S6_perts.set';
-%participant_id = 'S6';
+%set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S7-2022-10-26T103854/S7_perts.set';
+%path = '/Users/diskuser/analysis/eeg_data/main/eeg/S7-2022-10-26T103854';
+%participant_id = 'S7';
 %or do batch processing
-set_file = [path '/' participant_id '_perts.set'];
+set_file = [path '/' participant_id '_perts_onsets.set'];
 
 %decide if we have to to run the ICA
 run_ica = 0;
@@ -63,6 +64,6 @@ if run_ica == 1
         % EEG = pop_subcomp(EEG, goodIcIdx, 0, 1); % remove components
         %EEG.etc.ic_classification.ICLabel.classifications = EEG.etc.ic_classification.ICLabel.classifications(goodIcIdx,:); % update IC label info
 
-    savename = [participant_id '_ica.set'];
+    savename = [path participant_id '_ica.set'];
     EEG = pop_saveset(EEG, 'filename',savename);
 end

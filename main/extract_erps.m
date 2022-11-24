@@ -5,7 +5,7 @@
 %path = '/Users/diskuser/analysis/eeg_data/main/eeg/S7-2022-10-26T103854';
 %participant_id = 'S7';
 %or do batch processing
-set_file = [path '/' participant_id '_ica.set'];
+set_file = [path '/' participant_id '_preprocessed.set'];
 
 EEG = pop_loadset(set_file);
 
