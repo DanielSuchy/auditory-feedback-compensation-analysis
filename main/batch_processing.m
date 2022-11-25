@@ -15,19 +15,21 @@ participant_folders = files([files.isdir]);
 for participant = 1:length(participant_folders)
     path = [participant_folders(participant).folder '/' participant_folders(participant).name];
     participant_id = extractBefore(participant_folders(participant).name, '-');
-    if strcmp(participant_id, 'S1') || strcmp(participant_id, 'S12') || strcmp(participant_id, 'S8') 
-        continue %skip this participant for now (EEG trigger codes were different)
-    end
+    %if strcmp(participant_id, 'S1') || strcmp(participant_id, 'S12')
+    %    continue %skip this participant for now (EEG trigger codes were different)
+    %end
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %read_merge_eeg;
+    %insert_responses
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %rename_triggers;
+    %match_audio_to_eeg
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %mark_pert_onset;
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %mark_vocal_onset;
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %preprocess;
-    cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
-    extract_erps;
+    %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
+    %extract_erps;
 end
