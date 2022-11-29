@@ -220,3 +220,5 @@ xlabel('Time (ms)')
 ylabel('Amplitude')
 l = line([0 0],[-5 5]); l.Color = 'k';
 l = line([-500 1000],[0 0]); l.Color = 'k';
+
+timtopo(aware_onset_erp_mean, eeg.chanlocs, 'plottimes', [100 200 300 400 500 600 700]);

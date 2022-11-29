@@ -31,7 +31,10 @@ EEG = pop_eegfiltnew(EEG, 0, 40); %low-pass
 EEG = pop_interp(EEG, orign_chanlocs, 'spherical');
 
 % average reference
-EEG = pop_reref(EEG, []);
+%EEG = pop_reref(EEG, []);
+%linked mastoids
+EEG = pop_reref( EEG, [27 28] );
+EEG = pop_interp(EEG, orign_chanlocs, 'spherical');
 
 %save
 savename = [path '/' participant_id '_preprocessed.set'];

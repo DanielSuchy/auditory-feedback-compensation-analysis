@@ -2,8 +2,8 @@
 %response_sound_data = load('S4_block1_PertrurbExpPilot.mat');
 %setfile = '/Users/diskuser/analysis/tutorial/audapter_eeg_sync/S4_renamed.set';
 %or do batch processing
-set_file = [path '/' participant_id '_renamed.set'];
-response_sound_data = load(['/Users/diskuser/analysis/eeg_data/main/experiment/' participant_id '/' participant_id '_block1_PertrurbExpPilot.mat']);
+set_file = [path '/' participant_id '_matched.set'];
+response_sound_data = load(['/Users/diskuser/analysis/eeg_data/main/experiment/' participant_id '/' participant_id '_block1_PertrurbExpPilot_matched.mat']);
 
 responses = response_sound_data.whole_data;
 audio = response_sound_data.audapter_data;
