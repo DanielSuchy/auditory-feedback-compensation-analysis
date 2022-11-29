@@ -10,8 +10,6 @@ audio = response_sound_data.audapter_data;
 EEG = pop_loadset(set_file);
 events = struct2table(EEG.event);
 
-disp([participant_id, ' eeg trials: ' num2str(height(events(strcmp(events.type,'audapterstart'), :))) ' audio trials: ' num2str(length(audio))]);
-
 %% Perturbation Onset
 % go through the trials one-by-one and mark the perturbation onset
 current_trial = 0;

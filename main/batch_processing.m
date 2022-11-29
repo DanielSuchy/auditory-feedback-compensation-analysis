@@ -20,10 +20,11 @@ for participant = 1:length(participant_folders)
     %end
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %read_merge_eeg;
-    %insert_responses
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %rename_triggers;
-    %match_audio_to_eeg
+    %insert_responses %participants 1 and 2 only
+    cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
+    match_audapter_to_eeg;
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %mark_pert_onset;
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')

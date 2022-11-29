@@ -7,10 +7,10 @@ EEG = pop_loadset('/Users/diskuser/analysis/eeg_data/main/eeg/S1-2022-10-03T1746
 
 %see if we have all trials in both responses and eeg
 eeg_events = struct2table(EEG.event);
-eeg_trials_n = sum(strcmp(eeg_events.type, 'audapterend'));
+eeg_trials_n = sum(strcmp(eeg_events.type, 'audapterstart'));
 
-%eeg signal does not contain the first trial for participant 1
-responses = responses(2:end, :);
+%eeg signal does not contain the first two trials for participant 1
+responses = responses(3:end, :);
 responses_n = height(responses);
 
 if eeg_trials_n ~= responses_n
@@ -26,7 +26,7 @@ trial_count = 1; % there are multiple events per trial
 while i < height(eeg_events) + 1
     current_event = table2array(eeg_events(i, "type")); % e.g. 'audapterend'
     current_event_latency = table2array(eeg_events(i, "latency")); %when it happened
-    if strcmp(current_event, 'audapterend') %insert response at the end of every trial
+    if strcmp(current_event, 'audapterend') && i ~= 1  %insert response at the end of every  fully recorded trial
         latency = current_event_latency + 50; %introduce a slight delay for better visualization
         type = {['awareness' num2str(table2array(responses(trial_count, 'how_noticeable_response')))]}; %extract participant's response
         trial_count = trial_count + 1;
@@ -42,5 +42,5 @@ end
 
 %save the result
 EEG.event = table2struct(eeg_events);
-savename = '../../eeg_data/main/eeg/S1-2022-10-03T174648/S1_responses.set';
+savename = '../../eeg_data/main/eeg/S1-2022-10-03T174648/S1_renamed.set';
 EEG = pop_saveset(EEG, 'filename',savename);
