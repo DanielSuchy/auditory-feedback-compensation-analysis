@@ -5,30 +5,30 @@
 %path = '/Users/diskuser/analysis/eeg_data/main/eeg/S7-2022-10-26T103854';
 %participant_id = 'S7';
 %or do batch processing
-set_file = [path '/' participant_id '_preprocessed.set'];
+set_file = [path '/' participant_id '_ica.set'];
 
 EEG = pop_loadset(set_file);
 
 %% Voice onset
 %see if the voice onset tool works for this participant, if not, skip
-events = struct2table(EEG.event);
-onsets = sum(strcmp(events.type, 'voice_onset'));
-if onsets > 0
-    % epoch, baseline removal, and artifact rejection
-    EEG_voice_onset = pop_epoch( EEG, {  'voice_onset'  }, [-0.5 3], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
-    EEG_voice_onset = pop_rmbase( EEG_voice_onset, [-500 0]);
-    
-    locthresh = 3;
-    globthresh = 3;
-    EEG_voice_onset = pop_jointprob(EEG_voice_onset, 1, [1:32], locthresh, globthresh, 1);
-    ERP_voice_onset = mean(EEG_voice_onset.data, 3);
-    
-    %save the ERPs
-    savename = [path '/' participant_id '_voice_onset_erps.mat'];
-    save(savename, "ERP_voice_onset");
-    savename = [path '/' participant_id '_voice_onset_eeg.mat'];
-    save(savename, "EEG_voice_onset");
-end
+% events = struct2table(EEG.event);
+% onsets = sum(strcmp(events.type, 'voice_onset'));
+% if onsets > 0
+%     % epoch, baseline removal, and artifact rejection
+%     EEG_voice_onset = pop_epoch( EEG, {  'voice_onset'  }, [-0.5 3], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+%     EEG_voice_onset = pop_rmbase( EEG_voice_onset, [-500 0]);
+%     
+%     locthresh = 3;
+%     globthresh = 3;
+%     EEG_voice_onset = pop_jointprob(EEG_voice_onset, 1, [1:32], locthresh, globthresh, 1);
+%     ERP_voice_onset = mean(EEG_voice_onset.data, 3);
+%     
+%     %save the ERPs
+%     savename = [path '/' participant_id '_voice_onset_erps.mat'];
+%     save(savename, "ERP_voice_onset");
+%     savename = [path '/' participant_id '_voice_onset_eeg.mat'];
+%     save(savename, "EEG_voice_onset");
+% end
 
 %% Perturbation onset - bigpert vs nopert
 % epoch, baseline removal, and artifact rejection

@@ -3,15 +3,24 @@ clear;
 data = load('main/valid_data.mat');
 data = data.valid_data;
 
+%remove the outlier
+data(data.participant == 7 & data.trial == 132, :) = [];
+
 %draw response intensity based on magnitude of pitch shift
 [pitch_shift, ~, n] = unique(data.pert_magnitude);
 mean_response = accumarray(n, data.difference_in_cents, [], @(x)  mean(x));
 stdev_response = accumarray(n, data.difference_in_cents, [], @(x)  std(x));
 [pitch_shift mean_response stdev_response]
 
+%line plot as in Hafke
 pitch_shift = categorical(pitch_shift);
 figure
-errorbar(pitch_shift, mean_response, stdev_response)
+errorbar(pitch_shift, mean_response, stdev_response, 'LineWidth', 3)
+yline(0)
+title("Mean magnitude of vocal adaptation to different magnitudes of artificial pitch shift", ...
+    'FontSize', 17);
+xlabel("Magnitude of pitch shift (cents)", 'FontSize', 17)
+ylabel("Magnitude of vocal adaptation (cents)", 'FontSize',17)
 
 %draw correct detections of pitch shift based on pert magnitude
 data.aware = data.how_noticeable_response > 0;
@@ -19,8 +28,13 @@ mean_aware = accumarray(n, data.aware, [], @(x)  mean(x));
 stdev_aware = accumarray(n, data.aware, [], @(x)  std(x));
 
 figure
-errorbar(pitch_shift, mean_aware, stdev_aware)
+scatter(pitch_shift, mean_aware, 'LineWidth', 3)
+ylim([0 1.5])
+yline(0.75)
+xlabel("Magnitude of pitch shift (cents)", 'FontSize', 17)
+ylabel("Probability of detection", 'FontSize', 17)
 
+return
 %draw results for each participant
 figure();
 figure_position = 1;
@@ -55,7 +69,9 @@ mean(aware_negative.difference_in_cents)
 mean(unaware_negative.difference_in_cents)
 
 %data.difference_in_cents = abs(data.difference_in_cents);
-aware = data(data.aware == 1, :);
-unaware = data(data.aware == 0, :);
+aware = data(data.aware == 1 & data.pert_magnitude == 0.19, :);
+unaware = data(data.aware == 0  & data.pert_magnitude == 0.19, :);
+aware.difference_in_cents = abs(aware.difference_in_cents);
+unaware.difference_in_cents = abs(unaware.difference_in_cents);
 mean(aware.difference_in_cents)
 mean(unaware.difference_in_cents)
