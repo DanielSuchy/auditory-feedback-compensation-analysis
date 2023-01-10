@@ -25,6 +25,11 @@ awareness_results.aware = double(awareness_results.aware);
 awareness_results.mean_aan = double(awareness_results.mean_aan);
 lme_aan = fitlme(awareness_results, 'mean_aan~aware+(1|participant_id)');
 
+lme_aan
+figure;
+scatter(awareness_results.aware, awareness_results.mean_aan);
+refline(-0.013,-0.00074)
+xlim([-0.2 1.2])
 
 %% late positivity
 histogram(awareness_results.mean_lp);
@@ -39,4 +44,30 @@ awareness_results.mean_lp = double(awareness_results.mean_lp);
 lme_lp = fitlme(awareness_results, 'mean_lp~aware+(1|participant_id)');
 
 lme_lp
-lme_aan
+
+%% control trials - ann
+control_results = load("/Users/diskuser/analysis/eeg_data/main/eeg/control_trial_results.mat");
+control_results = control_results.all_results;
+
+histogram(control_results.mean_aan);
+boxplot(control_results.mean_aan, control_results.has_pert);
+
+figure;
+scatter(control_results.has_pert, control_results.mean_aan);
+xlim([-0.2 1.2])
+
+control_results.has_pert = double(control_results.has_pert);
+control_results.mean_aan = double(control_results.mean_aan);
+lme_aan = fitlme(control_results, 'mean_aan~has_pert+(1|participant_id)');
+
+%% control trials - lp
+histogram(control_results.mean_lp);
+boxplot(control_results.mean_lp, control_results.has_pert);
+
+figure;
+scatter(control_results.has_pert, control_results.mean_aan);
+xlim([-0.2 1.2])
+
+control_results.has_pert = double(control_results.has_pert);
+control_results.mean_lp = double(control_results.mean_lp);
+lme_lp = fitlme(control_results, 'mean_lp~has_pert+(1|participant_id)');
