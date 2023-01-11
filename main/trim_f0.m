@@ -1,7 +1,7 @@
 %remove last 200 ms from the F0 signal, these tend to be faulty
 clear;
 
-all_data = load('main\all_data.mat');
+all_data = load('../../eeg_data/main/experiment/all_data_f0.mat');
 all_data = all_data.all_data;
 sample_rate = 16000;
 trim_by = 0.300; % 300 ms
@@ -21,5 +21,5 @@ for i = 1:height(all_data)
     all_data.f0_time_points{i} = time_points_result;
 end
 
-save('main\all_data.mat', 'all_data', '-v7.3');
+save('../../eeg_data/main/experiment/all_data_trimmed.mat', 'all_data', '-v7.3');
 disp('Trimmed F0 signal');
