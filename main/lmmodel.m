@@ -3,6 +3,11 @@ clear;
 awareness_results = load("/Users/diskuser/analysis/eeg_data/main/eeg/awareness_results.mat");
 awareness_results = awareness_results.all_results;
 
+%% summary
+groupsummary(awareness_results, 'participant_id')
+groupsummary(awareness_results, 'aware')
+groupsummary(awareness_results, ["participant_id" "aware"])
+
 %% auditory awareness negativity
 histogram(awareness_results.mean_aan);
 boxplot(awareness_results.mean_aan, awareness_results.aware);

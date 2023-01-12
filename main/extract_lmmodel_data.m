@@ -21,14 +21,14 @@ for i = 1:height(all_data)
     erps = data.data; %electrodes x voltage at time points x trials
 
     %average accross electrodes, use central electrodes only
-    %select_channels = [1 2 11 3 17 4 12];
+    %select_channels = [1 2 3 17 4];
     %erps = erps(select_channels, :, :);
     erps = mean(erps);
     erps = squeeze(erps)'; %makes it trials x average voltage at time points
 
     %select relevant time windows
     times_erps = [times; erps];
-    aan = times_erps(:,times_erps(1,:) >= 50 & times_erps(1,:) <= 150);
+    aan = times_erps(:,times_erps(1,:) >= 100 & times_erps(1,:) <= 200);
     lp = times_erps(:,times_erps(1,:) >= 300 & times_erps(1,:) <= 500);
 
     %remove times from data structure
@@ -73,14 +73,14 @@ for i = 1:height(all_data)
     erps = data.data; %electrodes x voltage at time points x trials
 
     %average accross electrodes
-    %select_channels = [1 2 11 3 17 4 12];
+    %select_channels = [1 2 3 17 4];
     %erps = erps(select_channels, :, :);
     erps = mean(erps);
     erps = squeeze(erps)'; %makes it trials x average voltage at time points
 
     %select relevant time windows
     times_erps = [times; erps];
-    aan = times_erps(:,times_erps(1,:) >= 50 & times_erps(1,:) <= 150);
+    aan = times_erps(:,times_erps(1,:) >= 100 & times_erps(1,:) <= 200);
     lp = times_erps(:,times_erps(1,:) >= 300 & times_erps(1,:) <= 500);
 
     %remove times from data structure

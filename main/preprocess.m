@@ -1,9 +1,9 @@
 %load the data individually
-set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S11-2022-11-07T162012/S11_perts.set';
-path = '/Users/diskuser/analysis/eeg_data/main/eeg/S11-2022-11-07T162012/';
-participant_id = 'S11';
+%set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S11-2022-11-07T162012/S11_perts.set';
+%path = '/Users/diskuser/analysis/eeg_data/main/eeg/S11-2022-11-07T162012/';
+%participant_id = 'S11';
 %or do batch processing
-%set_file = [path '/' participant_id '_perts.set'];
+set_file = [path '/' participant_id '_perts.set'];
 
 %decide if we have to to run the ICA
 run_ica = 1;

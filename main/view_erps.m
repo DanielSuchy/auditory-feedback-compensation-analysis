@@ -182,9 +182,10 @@ end
 eeg_unaware_onset_times_mean = mean(all_unaware_onset_eeg_times, 3);
 
 %plot pert erps
-%plot_channels = [5 6 18 21 22 23 24]; %central electrodes
+plot_channels = [18 24 22 21 23]; %central electrodes
 %plot_channels = [30 16 8 19 7 27 29 15 9 20 10]; % right hemisphere electrodes
 %plot_channels = [1 2 11 3 17 4 12]; % left hemisphere electrodes
+%plot_channels = [1 2 3 17 4]; %front electrodes
 figure;
 plot(eeg_aware_onset_times_mean, mean(aware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 hold on
@@ -221,5 +222,9 @@ ylabel('Amplitude')
 l = line([0 0],[-5 5]); l.Color = 'k';
 l = line([-500 1000],[0 0]); l.Color = 'k';
 
+%which channel locations have the biggest differences?
 timtopo(aware_onset_erp_mean, eeg.chanlocs, 'plottimes', [100 200 300 400 500 600 700]);
 timtopo(unaware_onset_erp_mean, eeg.chanlocs, 'plottimes', [100 200 300 400 500 600 700]);
+
+difference = unaware_onset_erp_mean - aware_onset_erp_mean;
+timtopo(difference, eeg.chanlocs, 'plottimes', [100 200 300 400 500 600 700]);

@@ -33,9 +33,9 @@ EEG = pop_loadset(set_file);
 %% Perturbation onset - bigpert vs nopert
 % epoch, baseline removal, and artifact rejection
 EEG_pert_onset = pop_epoch( EEG, {  'PertOnset'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
-EEG_pert_onset = pop_rmbase( EEG_pert_onset, [-500 0]);
+%EEG_pert_onset = pop_rmbase( EEG_pert_onset, [-500 0]);
 EEG_nopert_onset = pop_epoch( EEG, {  'NoPertOnset'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
-EEG_nopert_onset = pop_rmbase( EEG_nopert_onset, [-500 0]);
+%EEG_nopert_onset = pop_rmbase( EEG_nopert_onset, [-500 0]);
 
 locthresh = 3;
 globthresh = 3;
@@ -65,9 +65,9 @@ if unaware_trials_n == 0
 end
 
 EEG_aware_onset = pop_epoch( EEG, {  'PertOnset_aware'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
-EEG_aware_onset = pop_rmbase( EEG_aware_onset, [-500 0]);
+%EEG_aware_onset = pop_rmbase( EEG_aware_onset, [-500 0]);
 EEG_unaware_onset = pop_epoch( EEG, {  'PertOnset_unaware'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
-EEG_unaware_onset = pop_rmbase( EEG_unaware_onset, [-500 0]);
+%EEG_unaware_onset = pop_rmbase( EEG_unaware_onset, [-500 0]);
 
 locthresh = 3;
 globthresh = 3;
