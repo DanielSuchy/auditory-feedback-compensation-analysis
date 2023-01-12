@@ -182,7 +182,7 @@ end
 eeg_unaware_onset_times_mean = mean(all_unaware_onset_eeg_times, 3);
 
 %plot pert erps
-plot_channels = [5 6 18 21 22 23 24]; %central electrodes
+%plot_channels = [5 6 18 21 22 23 24]; %central electrodes
 %plot_channels = [30 16 8 19 7 27 29 15 9 20 10]; % right hemisphere electrodes
 %plot_channels = [1 2 11 3 17 4 12]; % left hemisphere electrodes
 figure;
@@ -222,3 +222,4 @@ l = line([0 0],[-5 5]); l.Color = 'k';
 l = line([-500 1000],[0 0]); l.Color = 'k';
 
 timtopo(aware_onset_erp_mean, eeg.chanlocs, 'plottimes', [100 200 300 400 500 600 700]);
+timtopo(unaware_onset_erp_mean, eeg.chanlocs, 'plottimes', [100 200 300 400 500 600 700]);
