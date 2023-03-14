@@ -105,12 +105,13 @@ hold on;
 plot(eeg_nopert_onset_times_mean, mean(nopert_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 xlim([-200 800])
 ylim([-3 3])
-legend('Perturbation', 'No perturbation')
-title('Perturbation onset ERPs')
-xlabel('Time (ms)')
-ylabel('Amplitude')
+title('Perturbation onset ERPs', 'FontSize',30, 'FontWeight','bold')
+xlabel('Time (ms)', 'FontSize', 30, 'FontWeight','bold')
+ylabel('Voltage (µV)', 'FontSize',30, 'FontWeight','bold')
 l = line([0 0],[-5 5]); l.Color = 'k';
 l = line([-500 1000],[0 0]); l.Color = 'k';
+legend({'Perturbation (+200 cents)', 'No perturbation'})
+fontsize(gca, 24, 'points')
 
 %plot pert erps including individual data
 figure;
@@ -185,19 +186,21 @@ eeg_unaware_onset_times_mean = mean(all_unaware_onset_eeg_times, 3);
 plot_channels = [18 24 22 21 23]; %central electrodes
 %plot_channels = [30 16 8 19 7 27 29 15 9 20 10]; % right hemisphere electrodes
 %plot_channels = [1 2 11 3 17 4 12]; % left hemisphere electrodes
-%plot_channels = [1 2 3 17 4]; %front electrodes
+%plot_channels = [1 2 17]; %posterior 
+%plot_chanels = 1:32;
 figure;
 plot(eeg_aware_onset_times_mean, mean(aware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 hold on
 plot(eeg_unaware_onset_times_mean, mean(unaware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 xlim([-200 800])
 ylim([-3 3])
-legend('aware', 'unaware')
-title('Perturbation onset ERPs (critical trial awareness)')
-xlabel('Time (ms)')
-ylabel('Amplitude')
+title('Perturbation onset ERPs (critical trial awareness)', 'FontSize',30, 'FontWeight','bold')
+xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold')
+ylabel('Voltage (µV)', 'FontSize',30, 'FontWeight','bold')
 l = line([0 0],[-5 5]); l.Color = 'k';
 l = line([-500 1000],[0 0]); l.Color = 'k';
+legend('aware', 'unaware')
+fontsize(gca, 24, 'points');
 
 %plot pert erps including individual data
 figure;
@@ -223,8 +226,47 @@ l = line([0 0],[-5 5]); l.Color = 'k';
 l = line([-500 1000],[0 0]); l.Color = 'k';
 
 %which channel locations have the biggest differences?
-timtopo(aware_onset_erp_mean, eeg.chanlocs, 'plottimes', [100 200 300 400 500 600 700]);
+figure;
+timtopo(aware_onset_erp_mean, eeg.chanlocs, 'plottimes', [100 200 300 400 500]);
+hold on;
 timtopo(unaware_onset_erp_mean, eeg.chanlocs, 'plottimes', [100 200 300 400 500 600 700]);
 
-difference = unaware_onset_erp_mean - aware_onset_erp_mean;
-timtopo(difference, eeg.chanlocs, 'plottimes', [100 200 300 400 500 600 700]);
+difference = aware_onset_erp_mean - unaware_onset_erp_mean;
+timtopo(difference, eeg.chanlocs, 'plottimes', [100 200 300 400 500]);
+
+%consruct scalp maps for aware/unaware and their difference
+%at relevant times: 150 200 250 ms
+index150 = find(eeg_aware_onset_times_mean == 0);
+index200 = find(eeg_aware_onset_times_mean == 200);
+index250 = find(eeg_aware_onset_times_mean == 250);
+figure;
+subplot(3, 3, 1);
+topoplot(difference(:, index150), eeg.chanlocs)
+subplot(3, 3, 2);
+topoplot(difference(:, index200), eeg.chanlocs)
+subplot(3, 3, 3);
+topoplot(difference(:, index250), eeg.chanlocs)
+
+index = [find(eeg.times == 100) find(eeg.times == 200) find(eeg.times == 300) find(eeg.times == 400) find(eeg.times == 500)];
+all_electrodes = 1:32;
+central_electrodes = [18 21 22 23 24];
+noncentral_electrodes = all_electrodes(~ismember(all_electrodes, central_electrodes));
+for i = 1:length(index)
+    set(0,'defaultAxesFontSize', 15)
+    subplot(3,5,i)
+    topoplot(aware_onset_erp_mean(1:32,index(i),:), eeg.chanlocs(1,1:32), 'maplimits', [-2 2], 'emarker2', {noncentral_electrodes,'.','w'}, 'emarkersize', 14)
+    title([num2str(eeg.times(index(i))), ' ms'],'FontWeight','Normal')
+    colormap(redblue);
+
+    set(0,'defaultAxesFontSize', 15)
+    subplot(3,5,i + 5)
+    topoplot(unaware_onset_erp_mean(1:32,index(i),:), eeg.chanlocs(1,1:32), 'maplimits', [-2 2], 'emarker2', {noncentral_electrodes,'.','w'}, 'emarkersize', 14)
+    title([num2str(eeg.times(index(i))), ' ms'],'FontWeight','Normal')
+    colormap(redblue);
+
+    set(0,'defaultAxesFontSize', 15)
+    subplot(3,5,i+10)
+    topoplot(difference(1:32,index(i),:), eeg.chanlocs(1,1:32), 'maplimits', [-2 2], 'emarker2', {noncentral_electrodes,'.','w'}, 'emarkersize', 14)
+    title([num2str(eeg.times(index(i))), ' ms'],'FontWeight','Normal')
+    colormap(redblue);
+end

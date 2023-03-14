@@ -1,9 +1,9 @@
 %extract erps from preprocessed data
 
 %load the data individually
-%set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S7-2022-10-26T103854/S7_preprocessed.set';
-%path = '/Users/diskuser/analysis/eeg_data/main/eeg/S7-2022-10-26T103854';
-%participant_id = 'S7';
+%set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S8-2022-10-31T175508/S8_preprocessed.set';
+%path = '/Users/diskuser/analysis/eeg_data/main/eeg/S8-2022-10-31T175508';
+%participant_id = 'S8';
 %or do batch processing
 set_file = [path '/' participant_id '_ica.set'];
 

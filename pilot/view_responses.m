@@ -13,14 +13,18 @@ stdev_response = accumarray(n, data.difference_in_cents, [], @(x)  std(x));
 [pitch_shift mean_response stdev_response]
 
 %line plot as in Hafke
+pitch_shift = pitch_shift * 100;
 pitch_shift = categorical(pitch_shift);
 figure
-errorbar(pitch_shift, mean_response, stdev_response, 'LineWidth', 3)
+errorbar(pitch_shift, mean_response, stdev_response, 'LineWidth', 4)
 yline(0)
-title("Mean magnitude of vocal adaptation to different magnitudes of artificial pitch shift", ...
-    'FontSize', 17);
-xlabel("Magnitude of pitch shift (cents)", 'FontSize', 17)
-ylabel("Magnitude of vocal adaptation (cents)", 'FontSize',17)
+fontsize(gca, 30, 'points')
+title(['Mean magnitude of vocal adaptation to different magnitudes of artificial pitch shift' newline], ...
+    'FontSize', 40, 'FontWeight','bold');
+xlabel("Magnitude of pitch shift (cents)", 'FontSize', 40, 'FontWeight','bold')
+ylabel("Magnitude of vocal adaptation (cents)", 'FontSize',40, 'FontWeight','bold')
+
+
 
 %draw correct detections of pitch shift based on pert magnitude
 data.aware = data.how_noticeable_response > 0;
