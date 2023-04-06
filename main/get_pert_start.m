@@ -2,7 +2,7 @@
 clear;
 
 %load the data
-all_data = load('../../eeg_data/main/experiment/all_data_trimmed.mat');
+all_data = load('/Users/diskuser/analysis/all_data/experiment/all_data_trimmed.mat');
 all_data = all_data.all_data;
 f0_data = all_data.f0;
 audapter_data = all_data.audapter_data;
@@ -48,6 +48,6 @@ end
 
 %save the file
 all_data = [all_data, f0_data_labeled];
-save('../../eeg_data/main/experiment/all_data_pertstart.mat', "all_data", '-v7.3');
+save('/Users/diskuser/analysis/all_data/experiment/all_data_pertstart.mat', "all_data", '-v7.3');
 disp("calculated pert start and end");
 

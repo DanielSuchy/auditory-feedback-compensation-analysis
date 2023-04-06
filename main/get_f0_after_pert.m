@@ -1,6 +1,6 @@
 clear;
 
-all_data = load('../../eeg_data/main/experiment/all_data_meanf0.mat');
+all_data = load('/Users/diskuser/analysis/all_data/experiment/all_data_meanf0.mat');
 all_data = all_data.all_data;
 all_data.mean_f0_after_pert = nan([height(all_data), 1]);
 all_data.meets_2sd_condition = zeros([height(all_data), 1]);
@@ -64,5 +64,5 @@ for trial_id = 1:height(all_data)
     end
 end
 
-save('../../eeg_data/main/experiment/all_data_afterpert.mat', "all_data", '-v7.3');
+save('/Users/diskuser/analysis/all_data/experiment/all_data_afterpert.mat', "all_data", '-v7.3');
 disp("calculated F0 after pert");

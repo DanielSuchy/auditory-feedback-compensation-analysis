@@ -2,7 +2,7 @@
 clear;
 
 %make a list of indivudal data files (one per participant)
-all_files = dir("../../eeg_data/main/experiment/**/*.mat");
+all_files = dir("/Users/diskuser/analysis/all_data/experiment/**/*block1*.mat");
 all_response_data = table();
 all_audio_data = [];
 
@@ -24,5 +24,5 @@ all_data = renamevars(all_data, ["ID", "Var9", "OST_worked", 'how_noticeable_res
 %assign correct numbers to participants
 all_data(all_data.participant == 120, "participant") = table(12);
 
-save('../../eeg_data/main/response_audio_data.mat', "all_data", '-v7.3');
+save('/Users/diskuser/analysis/all_data/experiment/response_audio_data.mat', "all_data", '-v7.3');
 disp('merged all data into a single file');

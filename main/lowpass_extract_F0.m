@@ -3,7 +3,7 @@
 % for further procesing
 clear;
 
-all_data = load('../../eeg_data/main/experiment/response_audio_data.mat');
+all_data = load('/Users/diskuser/analysis/all_data/experiment/response_audio_data.mat');
 all_data = all_data.all_data;
 audapter_data = all_data.audapter_data;
 audio = transpose({audapter_data(:).signalIn});
@@ -15,7 +15,7 @@ f0_time_points = transpose(f0_time_points);
 
 
 all_data = [all_data table(f0) table(f0_time_points)];
-save('../../eeg_data/main/experiment/all_data_f0.mat', "all_data", '-v7.3');
+save('/Users/diskuser/analysis/all_data/experiment/all_data_f0.mat', "all_data", '-v7.3');
 disp('extracted F0');
 
 %lowpass-filter audio at 500Hz
