@@ -1,7 +1,7 @@
 clear;
 
 %% load the data
-results = load('/Users/diskuser/analysis/all_data/experiment/all_data_afterpert.mat');
+results = load('/Users/diskuser/analysis/all_data/experiment/all_data_final.mat');
 results = results.all_data;
 
 %exclude participants
@@ -14,12 +14,6 @@ results = results(~isnan(results.pert_start_time), :);
 %normal_variation = 2*std(abs(results.difference_in_cents), 'omitnan');
 %results(abs(results.difference_in_cents) > normal_variation, :) = [];
 results(abs(results.difference_in_cents) > 100, :) = [];
-
-%remove excess columns for easier viewing
-results.ost_worked = [];
-results.audapter_data = [];
-results.f0 = [];
-results.f0_time_points = [];
 
 %distinguish different trial types
 control_trials = results(results.pert_magnitude == 2 | results.pert_magnitude == 0.0001, :);
@@ -81,7 +75,7 @@ contingency_t = [contingency_t; table(meets_condition_true, meets_condition_fals
 [h,p,stats] = fishertest(contingency_t);
 
 %prepare table for mixed effects regression
-tbl = critical_trials(:, [1 4 10 12]);
+tbl = critical_trials(:, [1 4 5 16]);
 tbl.awareness = tbl.awareness > 0;
 tbl.direction = nan(height(tbl), 1);
 tbl(tbl.difference_in_cents > 0, :).direction = ones(height(tbl(tbl.difference_in_cents > 0, :)), 1);
@@ -94,7 +88,7 @@ lme = fitlme(tbl, 'difference_in_cents~awareness*direction+(1|participant)');
 lme
 
 %linear mixed effects with control trials
-tbl2 = results(results.pert_magnitude ~= 2, [1 3 4 10 12]);
+tbl2 = results(results.pert_magnitude ~= 2, [1 4 5 16]);
 tbl2.awareness = tbl2.awareness > 0;
 tbl2.direction = nan(height(tbl2), 1);
 tbl2(tbl2.difference_in_cents > 0, :).direction = ones(height(tbl2(tbl2.difference_in_cents > 0, :)), 1);
@@ -105,6 +99,17 @@ tbl2(tbl2.pert_magnitude == 0.0001, :).has_pert = zeros(height(tbl2(tbl2.pert_ma
 lme2 = fitlme(tbl2, 'difference_in_cents~has_pert*awareness*direction+(1|participant)');
 lme2
 
+%lme with continuous measurement
+tbl3 = results(results.pert_magnitude ~= 2, [1 4 5 17]);
+tbl3.awareness = tbl3.awareness > 0;
+tbl3.direction = nan(height(tbl3), 1);
+tbl3(tbl3.mean_cents_trimmed > 0, :).direction = ones(height(tbl3(tbl3.mean_cents_trimmed > 0, :)), 1);
+tbl3(tbl3.mean_cents_trimmed < 0, :).direction = zeros(height(tbl3(tbl3.mean_cents_trimmed < 0, :)), 1);
+tbl3.mean_cents_trimmed = abs(tbl3.mean_cents_trimmed);
+tbl3.has_pert = ones(height(tbl3), 1);
+tbl3(tbl3.pert_magnitude == 0.0001, :).has_pert = zeros(height(tbl3(tbl3.pert_magnitude == 0.0001, :)), 1);
+lme3 = fitlme(tbl3, 'mean_cents_trimmed~has_pert*awareness*direction+(1|participant)');
+lme3
 
 %% view the data
 histogram(results.difference_in_cents)
@@ -239,4 +244,30 @@ for i=1:height(results)
     xline(trial.pert_start_time)
     hold on;
 end
+
+%display cents time course;
+for i=1:300%height(results)
+    trial = results(i, :);
+    %time = (trial.f0_time_points{1} - 1)/16000; % transform time points (in n. of samples) to seconds
+    cents = trial.cents_after_pert_trimmed{1};
+    plot(1:length(cents), cents, 'LineWidth', 3.0);
+    %xline(trial.pert_start_time)
+    hold on;
+end
+
+%histograms for the continuous measurement
+hist(results.mean_cents_trimmed)
+
+figure
+histogram(unaware_adaptation.mean_cents_trimmed, 'Normalization','probability', FaceAlpha=0.3, BinWidth=3);
+hold on;
+histogram(aware_adaptation.mean_cents_trimmed, 'Normalization','probability', FaceAlpha=0.6, BinWidth=3);
+hold on;
+histogram(nopert_trials.mean_cents_trimmed, 'Normalization','probability', FaceAlpha=0.6, BinWidth=3);
+legend('aware', 'unaware', 'control (no pert.)', 'FontSize', 36)
+title('Vocal adaptiation magnitude, divided by awareness ratings', 'FontWeight','bold', 'FontSize',42)
+xlabel('adaptation magnitude (cents)', 'FontSize', 36, 'FontWeight','bold')
+ylabel('Probability', 'FontSize',36, 'FontWeight', 'bold')
+fontsize(gca, 30, 'points')
+
 

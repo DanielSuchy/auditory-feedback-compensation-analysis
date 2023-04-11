@@ -3,7 +3,7 @@
 %set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S8-2022-10-31T175508/S8_matched.set';
 %or do batch processing
 set_file = [path '/' participant_id '_matched.set'];
-response_sound_data = load(['/Users/diskuser/analysis/eeg_data/main/experiment/' participant_id '/' participant_id '_block1_PertrurbExpPilot_matched.mat']);
+response_sound_data = load(['/Users/diskuser/analysis/all_data/experiment/' participant_id '/' participant_id '_block1_PertrurbExpPilot_matched.mat']);
 
 responses = response_sound_data.whole_data;
 audio = response_sound_data.audapter_data;

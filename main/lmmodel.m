@@ -1,6 +1,6 @@
 clear;
 
-awareness_results = load("/Users/diskuser/analysis/eeg_data/main/eeg/awareness_results.mat");
+awareness_results = load("/Users/diskuser/analysis/all_data/eeg/awareness_results.mat");
 awareness_results = awareness_results.all_results;
 
 %% summary
@@ -85,3 +85,13 @@ control_results.has_pert = double(control_results.has_pert);
 control_results.mean_lp = double(control_results.mean_lp);
 lme_lp = fitlme(control_results, 'mean_lp~has_pert+(1|participant_id)');
 lme_lp
+
+%% include no-pert control trials in the model
+awareness_control_results = load("/Users/diskuser/analysis/all_data/eeg/awareness_control_results.mat");
+awareness_control_results = awareness_control_results.all_results;
+
+awareness_control_results.aware = double(awareness_control_results.aware);
+awareness_control_results.mean_aan = double(awareness_control_results.mean_aan);
+lme_aan = fitlme(awareness_control_results, 'mean_aan~has_pert+(1|participant_id)');
+
+lme_aan

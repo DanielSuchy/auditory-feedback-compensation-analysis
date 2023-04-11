@@ -4,18 +4,18 @@ clear all;
 close all;
 
 %this folder contains files for all participants
-root_path = '/Users/diskuser/analysis/eeg_data/main/eeg/';
+root_path = '/Users/diskuser/analysis/all_data/eeg/';
 cd(root_path);
 
 %load participants individually
-files = dir('*2022*');
+files = dir('S*');
 participant_folders = files([files.isdir]);
 
 %run the pipeline
 for participant = 1:length(participant_folders)
     path = [participant_folders(participant).folder '/' participant_folders(participant).name];
-    participant_id = extractBefore(participant_folders(participant).name, '-');
-    if strcmp(participant_id, 'S2') || strcmp(participant_id, 'S4') || strcmp(participant_id, 'S5')|| strcmp(participant_id, 'S9')|| strcmp(participant_id, 'S11')
+    participant_id = participant_folders(participant).name;
+    if strcmp(participant_id, 'S22') || strcmp(participant_id, 'S25') || strcmp(participant_id, 'S2')
         continue %skip this participant for now (EEG trigger codes were different)
     end
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')

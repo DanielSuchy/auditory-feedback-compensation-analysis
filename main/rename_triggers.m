@@ -1,7 +1,7 @@
 %rename eeg trigger codes to human-redable names to make preprocessing & analysis easier
 
 %load the data individually
-%set_file = '../../eeg_data/main/eeg/S6-2022-10-24T183712/S6.set';
+%set_file = '/Users/diskuser/analysis/all_data/eeg/S6-2022-10-24T183712/S6.set';
 %or do batch processing
 set_file = [path '/' participant_id '.set'];
 

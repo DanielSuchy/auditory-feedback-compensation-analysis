@@ -2,8 +2,8 @@
 %neur one stores a .ses file and a folder for each session
 
 %assumes batch processing, if not, add path and participant id manually
-%path = '/Users/diskuser/analysis/eeg_data/main/eeg/S7-2022-10-26T103854';
-%participant_id = 'S7';
+path = '/Users/diskuser/analysis/all_data/eeg/S24';
+participant_id = 'S24';
 cd(path);
 
 %sometimes there are multiple sessions for each participant - these need to be merged
