@@ -1,8 +1,8 @@
 %extract erps from preprocessed data
 
 %load the data individually
-%set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S8-2022-10-31T175508/S8_preprocessed.set';
-%path = '/Users/diskuser/analysis/eeg_data/main/eeg/S8-2022-10-31T175508';
+%set_file = '/Users/diskuser/analysis/all_data/eeg/S8/S8_ica.set';
+%path = '/Users/diskuser/analysis/all_data/eeg/S8';
 %participant_id = 'S8';
 %or do batch processing
 set_file = [path '/' participant_id '_ica.set'];
@@ -64,27 +64,61 @@ if unaware_trials_n == 0
     return;
 end
 
-EEG_aware_onset = pop_epoch( EEG, {  'PertOnset_aware'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+EEG_aware_crit = pop_epoch( EEG, {  'PertOnset_aware'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
 %EEG_aware_onset = pop_rmbase( EEG_aware_onset, [-500 0]);
-EEG_unaware_onset = pop_epoch( EEG, {  'PertOnset_unaware'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+EEG_unaware_crit = pop_epoch( EEG, {  'PertOnset_unaware'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
 %EEG_unaware_onset = pop_rmbase( EEG_unaware_onset, [-500 0]);
 
 locthresh = 3;
 globthresh = 3;
-EEG_aware_onset = pop_jointprob(EEG_aware_onset, 1, [1:32], locthresh, globthresh, 1);
-EEG_unaware_onset = pop_jointprob(EEG_unaware_onset, 1, [1:32], locthresh, globthresh, 1);
+EEG_aware_crit = pop_jointprob(EEG_aware_crit, 1, [1:32], locthresh, globthresh, 1);
+EEG_unaware_crit = pop_jointprob(EEG_unaware_crit, 1, [1:32], locthresh, globthresh, 1);
 
-ERP_aware_onset = mean(EEG_aware_onset.data, 3);
-ERP_unaware_onset = mean(EEG_unaware_onset.data, 3);
+ERP_aware_crit = mean(EEG_aware_crit.data, 3);
+ERP_unaware_crit = mean(EEG_unaware_crit.data, 3);
 
 %save the ERPs
-savename = [path '/' participant_id '_aware_onset_erps.mat'];
-save(savename, "ERP_aware_onset");
-savename = [path '/' participant_id '_unaware_onset_erps.mat'];
-save(savename, "ERP_unaware_onset");
+savename = [path '/' participant_id '_aware_crit_erps.mat'];
+save(savename, "ERP_aware_crit");
+savename = [path '/' participant_id '_unaware_crit_erps.mat'];
+save(savename, "ERP_unaware_crit");
 
-savename = [path '/' participant_id '_aware_onset_eeg.mat'];
-save(savename, "EEG_aware_onset");
-savename = [path '/' participant_id '_unaware_onset_eeg.mat'];
-save(savename, "EEG_unaware_onset");
+savename = [path '/' participant_id '_aware_crit_eeg.mat'];
+save(savename, "EEG_aware_crit");
+savename = [path '/' participant_id '_unaware_crit_eeg.mat'];
+save(savename, "EEG_unaware_crit");
 
+%% Also extract awareness ratings for no-pert trials
+events = struct2table(EEG.event);
+false_alarms_n = sum(strcmp(events.type, 'NoPertOnset_aware'));
+if ~false_alarms_n %no control trials with aware rating - save an empty file 
+    EEG_aware_control = [];
+    ERP_aware_control = [];
+    savename = [path '/' participant_id '_aware_control_erps.mat'];
+    save(savename, "ERP_aware_control");
+    savename = [path '/' participant_id '_aware_control_eeg.mat'];
+    save(savename, "EEG_aware_control");
+    return;
+end
+
+EEG_aware_control = pop_epoch( EEG, {  'NoPertOnset_aware'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+EEG_unaware_control = pop_epoch( EEG, {  'NoPertOnset_unaware'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+
+locthresh = 3;
+globthresh = 3;
+EEG_aware_control = pop_jointprob(EEG_aware_control, 1, [1:32], locthresh, globthresh, 1);
+EEG_unaware_control = pop_jointprob(EEG_unaware_control, 1, [1:32], locthresh, globthresh, 1);
+
+ERP_aware_control = mean(EEG_aware_control.data, 3);
+ERP_unaware_control = mean(EEG_unaware_control.data, 3);
+
+%save the ERPs
+savename = [path '/' participant_id '_aware_control_erps.mat'];
+save(savename, "ERP_aware_control");
+savename = [path '/' participant_id '_unaware_control_erps.mat'];
+save(savename, "ERP_unaware_control");
+
+savename = [path '/' participant_id '_aware_control_eeg.mat'];
+save(savename, "EEG_aware_control");
+savename = [path '/' participant_id '_unaware_control_eeg.mat'];
+save(savename, "EEG_unaware_control");

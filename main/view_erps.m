@@ -53,6 +53,7 @@ l = line([-500 1000],[0 0]); l.Color = 'k';
 %% perturbation onset - bigpert vs nopert
 %load the data
 %trials with pert onset
+cd('/Users/diskuser/analysis/all_data/eeg/')
 pert_onset_erps = dir('**/*_pert_onset_erps.mat');
 all_pert_onset_erps = [];
 for i=1:length(pert_onset_erps)   
@@ -139,44 +140,45 @@ l = line([-500 1000],[0 0]); l.Color = 'k';
 %% pertrubation onset - aware vs unaware
 %load the data
 %trials with awareness
-aware_onset_erps = dir('**/*_aware_onset_erps.mat');
+cd('/Users/diskuser/analysis/all_data/eeg/')
+aware_onset_erps = dir('**/*_aware_crit_erps.mat');
 all_aware_onset_erps = [];
 for i=1:length(aware_onset_erps)   
     file = [aware_onset_erps(i).folder '/' aware_onset_erps(i).name];
     erps = load(file);
-    erps = erps.ERP_aware_onset;
+    erps = erps.ERP_aware_crit;
     all_aware_onset_erps(:,:,i) = erps;
 end
 aware_onset_erp_mean = mean(all_aware_onset_erps, 3);
 
-aware_onset_eegs = dir('**/*_aware_onset_eeg.mat');
+aware_onset_eegs = dir('**/*_aware_crit_eeg.mat');
 all_aware_onset_eeg_times = [];
 for i=1:length(aware_onset_eegs)
     file = [aware_onset_eegs(i).folder '/' aware_onset_eegs(i).name];
     eeg = load(file);
-    eeg = eeg.EEG_aware_onset;
+    eeg = eeg.EEG_aware_crit;
     eeg_times = eeg.times;
     all_aware_onset_eeg_times(:, :, i) = eeg_times;
 end
 eeg_aware_onset_times_mean = mean(all_aware_onset_eeg_times, 3);
 
 %trials without awareness
-unaware_onset_erps = dir('**/*_unaware_onset_erps.mat');
+unaware_onset_erps = dir('**/*_unaware_crit_erps.mat');
 all_unaware_onset_erps = [];
 for i=1:length(unaware_onset_erps)   
     file = [unaware_onset_erps(i).folder '/' unaware_onset_erps(i).name];
     erps = load(file);
-    erps = erps.ERP_unaware_onset;
+    erps = erps.ERP_unaware_crit;
     all_unaware_onset_erps(:,:,i) = erps;
 end
 unaware_onset_erp_mean = mean(all_unaware_onset_erps, 3);
 
-unaware_onset_eegs = dir('**/*_unaware_onset_eeg.mat');
+unaware_onset_eegs = dir('**/*_unaware_crit_eeg.mat');
 all_unaware_onset_eeg_times = [];
 for i=1:length(unaware_onset_eegs)
     file = [unaware_onset_eegs(i).folder '/' unaware_onset_eegs(i).name];
     eeg = load(file);
-    eeg = eeg.EEG_unaware_onset;
+    eeg = eeg.EEG_unaware_crit;
     eeg_times = eeg.times;
     all_unaware_onset_eeg_times(:, :, i) = eeg_times;
 end
@@ -200,6 +202,24 @@ ylabel('Voltage (µV)', 'FontSize',30, 'FontWeight','bold')
 l = line([0 0],[-5 5]); l.Color = 'k';
 l = line([-500 1000],[0 0]); l.Color = 'k';
 legend('aware', 'unaware')
+fontsize(gca, 24, 'points');
+
+%plot including control data
+plot_channels = [18 24 22 21 23]; %central electrodes
+figure;
+plot(eeg_aware_onset_times_mean, mean(aware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3)
+hold on
+plot(eeg_unaware_onset_times_mean, mean(unaware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3)
+hold on
+plot(eeg_nopert_onset_times_mean, mean(nopert_onset_erp_mean(plot_channels, :))', 'LineWidth', 3)
+xlim([-200 800])
+ylim([-3 3])
+title('Perturbation onset ERPs (critical trial awareness)', 'FontSize',30, 'FontWeight','bold')
+xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold')
+ylabel('Voltage (µV)', 'FontSize',30, 'FontWeight','bold')
+l = line([0 0],[-5 5]); l.Color = 'k';
+l = line([-500 1000],[0 0]); l.Color = 'k';
+legend('aware', 'unaware', 'control')
 fontsize(gca, 24, 'points');
 
 %plot pert erps including individual data

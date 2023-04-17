@@ -1,5 +1,5 @@
 %load the data individually
-%response_sound_data = load('../../eeg_data/main/experiment/S8/S8_block1_PertrurbExpPilot_matched.mat');
+%response_sound_data = load('/Users/diskuser/analysis/all_data/experiment/S8/S8_block1_PertrurbExpPilot_matched.mat');
 %set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S8-2022-10-31T175508/S8_matched.set';
 %or do batch processing
 set_file = [path '/' participant_id '_matched.set'];
@@ -76,6 +76,18 @@ for i=1:n_markers
             events = [events; new_event];
         elseif perturbation_present == 0
             type = {'NoPertOnset'};
+            latency = pert_start;
+            new_event = table(latency, type);
+            events = [events; new_event];
+
+            %these two markers are at the same time (compares nopert <--> bigpert and aware <--> unaware)
+            awareness = events(i+2, :).type;
+            if strcmp(awareness, 'awareness0')
+                awareness = 'unaware';
+            else
+                awareness = 'aware';
+            end
+            type = {['NoPertOnset_' awareness]};
             latency = pert_start;
             new_event = table(latency, type);
             events = [events; new_event];
