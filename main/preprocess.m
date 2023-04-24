@@ -82,6 +82,9 @@ if run_ica == 1
         % EEG = pop_subcomp(EEG, goodIcIdx, 0, 1); % remove components
         %EEG.etc.ic_classification.ICLabel.classifications = EEG.etc.ic_classification.ICLabel.classifications(goodIcIdx,:); % update IC label info
 
-    savename = [path '/' participant_id '_ica.set'];
+    
+    EEG = pop_interp(EEG, orign_chanlocs, 'spherical');
+
+    savename = [path '/' participant_id '_ica_nolowpass.set'];
     EEG = pop_saveset(EEG, 'filename',savename);
 end

@@ -18,7 +18,7 @@ for participant = 1:length(participant_folders)
     if strcmp(participant_id, 'S2') || strcmp(participant_id, 'S22') || strcmp(participant_id, 'S25')
         continue %skip this participant for now (EEG trigger codes were different)
     end
-    %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
+    %cd('/Users/diskuser/analysis/auditory-feedback-compenation-analysis/main/')
     %read_merge_eeg;
     %cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')
     %rename_triggers;

@@ -13,7 +13,8 @@ results = results(~isnan(results.pert_start_time), :);
 %exclude outliers
 %normal_variation = 2*std(abs(results.difference_in_cents), 'omitnan');
 %results(abs(results.difference_in_cents) > normal_variation, :) = [];
-results(abs(results.difference_in_cents) > 100, :) = [];
+%results(abs(results.difference_in_cents) > 100, :) = [];
+results(abs(results.pitch_60_800) > 100, :) = [];
 
 %distinguish different trial types
 control_trials = results(results.pert_magnitude == 2 | results.pert_magnitude == 0.0001, :);
@@ -100,15 +101,15 @@ lme2 = fitlme(tbl2, 'difference_in_cents~has_pert*awareness*direction+(1|partici
 lme2
 
 %lme with continuous measurement
-tbl3 = results(results.pert_magnitude ~= 2, [1 4 5 17]);
+tbl3 = results(results.pert_magnitude ~= 2, [1 4 5 19:22]);
 tbl3.awareness = tbl3.awareness > 0;
 tbl3.direction = nan(height(tbl3), 1);
-tbl3(tbl3.mean_cents_trimmed > 0, :).direction = ones(height(tbl3(tbl3.mean_cents_trimmed > 0, :)), 1);
-tbl3(tbl3.mean_cents_trimmed < 0, :).direction = zeros(height(tbl3(tbl3.mean_cents_trimmed < 0, :)), 1);
-tbl3.mean_cents_trimmed = abs(tbl3.mean_cents_trimmed);
+tbl3(tbl3.pitch_60_800 > 0, :).direction = ones(height(tbl3(tbl3.pitch_60_800 > 0, :)), 1);
+tbl3(tbl3.pitch_60_800 < 0, :).direction = zeros(height(tbl3(tbl3.pitch_60_800 < 0, :)), 1);
+tbl3.pitch_60_800 = abs(tbl3.pitch_60_800);
 tbl3.has_pert = ones(height(tbl3), 1);
 tbl3(tbl3.pert_magnitude == 0.0001, :).has_pert = zeros(height(tbl3(tbl3.pert_magnitude == 0.0001, :)), 1);
-lme3 = fitlme(tbl3, 'mean_cents_trimmed~has_pert*awareness*direction+(1|participant)');
+lme3 = fitlme(tbl3, 'pitch_60_800~has_pert*awareness*direction+(1|participant)');
 lme3
 
 %% view the data
@@ -256,14 +257,14 @@ for i=1:300%height(results)
 end
 
 %histograms for the continuous measurement
-hist(results.mean_cents_trimmed)
+hist(results.pitch_60_800)
 
 figure
-histogram(unaware_adaptation.mean_cents_trimmed, 'Normalization','probability', FaceAlpha=0.3, BinWidth=3);
+histogram(unaware_adaptation.pitch_60_800, 'Normalization','probability', FaceAlpha=0.3, BinWidth=3);
 hold on;
-histogram(aware_adaptation.mean_cents_trimmed, 'Normalization','probability', FaceAlpha=0.6, BinWidth=3);
+histogram(aware_adaptation.pitch_60_800, 'Normalization','probability', FaceAlpha=0.6, BinWidth=3);
 hold on;
-histogram(nopert_trials.mean_cents_trimmed, 'Normalization','probability', FaceAlpha=0.6, BinWidth=3);
+%histogram(nopert_trials.mean_pitch_trimmed, 'Normalization','probability', FaceAlpha=0.6, BinWidth=3);
 legend('aware', 'unaware', 'control (no pert.)', 'FontSize', 36)
 title('Vocal adaptiation magnitude, divided by awareness ratings', 'FontWeight','bold', 'FontSize',42)
 xlabel('adaptation magnitude (cents)', 'FontSize', 36, 'FontWeight','bold')

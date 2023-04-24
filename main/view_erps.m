@@ -1,55 +1,5 @@
 clear all;
 
-%% voice onset
-%load the data
-%individually
-%voice_onset_erp = load('../../eeg_data/main/eeg/S6-2022-10-24T183712/S6_voice_onset_erps.mat');
-%voice_onset_erp = voice_onset_erp.ERP_voice_onset;
-%voice_onset_eeg = load('../../eeg_data/main/eeg/S6-2022-10-24T183712/S6_voice_onset_eeg.mat');
-%voice_onset_eeg = voice_onset_eeg.EEG_voice_onset;
-%or for the whole batch
-cd('../../eeg_data/main/eeg/');
-voice_onset_erps = dir('**/*voice_onset_erps.mat');
-all_erps = [];
-for i=1:length(voice_onset_erps)   
-    file = [voice_onset_erps(i).folder '/' voice_onset_erps(i).name];
-    erps = load(file);
-    erps = erps.ERP_voice_onset;
-    all_erps(:,:,i) = erps;
-end
-voice_onset_erp_mean = mean(all_erps, 3);
-
-voice_onset_eegs = dir('**/*voice_onset_eeg.mat');
-all_eeg_times = [];
-for i=1:length(voice_onset_eegs)
-    file = [voice_onset_eegs(i).folder '/' voice_onset_eegs(i).name];
-    eeg = load(file);
-    eeg = eeg.EEG_voice_onset;
-    eeg_times = eeg.times;
-    all_eeg_times(:, :, i) = eeg_times;
-end
-eeg_times_mean = mean(all_eeg_times, 3);
-
-%plot voice onset erps including individual data
-plot_channels = [5 6 18 21 22 23 24];
-figure;
-plot(eeg_times_mean, mean(voice_onset_erp_mean(plot_channels, :))', 'LineWidth', 5, 'Color', 'Red') % 18 = Cz
-hold on;
-for i=1:size(all_erps, 3)
-    plot(eeg_times_mean, mean(all_erps(plot_channels, :, i))', 'LineWidth', 1);
-    hold on;
-end
-xlim([-200 800])
-ylim([-3 3])
-title('Voice onset ERP')
-xlabel('Time (ms)')
-ylabel('Amplitude')
-l = line([0 0],[-5 5]); l.Color = 'k';
-l = line([-500 1000],[0 0]); l.Color = 'k';
-
-
-
-
 %% perturbation onset - bigpert vs nopert
 %load the data
 %trials with pert onset
@@ -195,7 +145,7 @@ plot(eeg_aware_onset_times_mean, mean(aware_onset_erp_mean(plot_channels, :))', 
 hold on
 plot(eeg_unaware_onset_times_mean, mean(unaware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 xlim([-200 800])
-ylim([-3 3])
+ylim([-1 1])
 title('Perturbation onset ERPs (critical trial awareness)', 'FontSize',30, 'FontWeight','bold')
 xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold')
 ylabel('Voltage (µV)', 'FontSize',30, 'FontWeight','bold')
