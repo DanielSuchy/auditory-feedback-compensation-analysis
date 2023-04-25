@@ -101,7 +101,7 @@ lme2 = fitlme(tbl2, 'difference_in_cents~has_pert*awareness*direction+(1|partici
 lme2
 
 %lme with continuous measurement
-tbl3 = results(results.pert_magnitude ~= 2, [1 4 5 19:22]);
+tbl3 = results(results.pert_magnitude ~= 2, [1 4 5 19]);
 tbl3.awareness = tbl3.awareness > 0;
 tbl3.direction = nan(height(tbl3), 1);
 tbl3(tbl3.pitch_60_800 > 0, :).direction = ones(height(tbl3(tbl3.pitch_60_800 > 0, :)), 1);
@@ -111,6 +111,18 @@ tbl3.has_pert = ones(height(tbl3), 1);
 tbl3(tbl3.pert_magnitude == 0.0001, :).has_pert = zeros(height(tbl3(tbl3.pert_magnitude == 0.0001, :)), 1);
 lme3 = fitlme(tbl3, 'pitch_60_800~has_pert*awareness*direction+(1|participant)');
 lme3
+
+tbl4 = results(results.pert_magnitude > 0.0001 & results.pert_magnitude < 2, [1 4 5 20:22]);
+tbl4.awareness = tbl4.awareness > 0;
+lme4 = fitlme(tbl4, 'pitch_minus200_0~awareness+(1|participant)');
+lme4
+
+lme4 = fitlme(tbl4, 'pitch_200_400~awareness+(1|participant)');
+lme4
+
+
+lme4 = fitlme(tbl4, 'pitch_400_800~awareness+(1|participant)');
+lme4
 
 %% view the data
 histogram(results.difference_in_cents)
