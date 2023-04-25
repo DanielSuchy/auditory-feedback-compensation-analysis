@@ -4,56 +4,45 @@ clear all;
 %load the data
 %trials with pert onset
 cd('/Users/diskuser/analysis/all_data/eeg/')
-pert_onset_erps = dir('**/*_pert_onset_erps.mat');
-all_pert_onset_erps = [];
-for i=1:length(pert_onset_erps)   
-    file = [pert_onset_erps(i).folder '/' pert_onset_erps(i).name];
-    erps = load(file);
-    erps = erps.ERP_pert_onset;
-    all_pert_onset_erps(:,:,i) = erps;
-end
-pert_onset_erp_mean = mean(all_pert_onset_erps, 3);
-
 pert_onset_eegs = dir('**/*_pert_onset_eeg.mat');
 all_pert_onset_eeg_times = [];
+all_pert_onset_erps = [];
 for i=1:length(pert_onset_eegs)
     file = [pert_onset_eegs(i).folder '/' pert_onset_eegs(i).name];
     eeg = load(file);
     eeg = eeg.EEG_pert_onset;
+    erps = eeg.data;
+    erps = mean(erps, 3);
     eeg_times = eeg.times;
     all_pert_onset_eeg_times(:, :, i) = eeg_times;
+    all_pert_onset_erps(:,:,i) = erps;
 end
-eeg_pert_onset_times_mean = mean(all_pert_onset_eeg_times, 3);
+pert_onset_erp_mean = mean(all_pert_onset_erps, 3);
+pert_onset_times_mean = mean(all_pert_onset_eeg_times, 3);
 
 %trials without pert onset
-nopert_onset_erps = dir('**/*_nopert_onset_erps.mat');
-all_nopert_onset_erps = [];
-for i=1:length(nopert_onset_erps)   
-    file = [nopert_onset_erps(i).folder '/' nopert_onset_erps(i).name];
-    erps = load(file);
-    erps = erps.ERP_nopert_onset;
-    all_nopert_onset_erps(:,:,i) = erps;
-end
-nopert_onset_erp_mean = mean(all_nopert_onset_erps, 3);
-
 nopert_onset_eegs = dir('**/*_nopert_onset_eeg.mat');
 all_nopert_onset_eeg_times = [];
+all_nopert_onset_erps = [];
 for i=1:length(nopert_onset_eegs)
     file = [nopert_onset_eegs(i).folder '/' nopert_onset_eegs(i).name];
     eeg = load(file);
     eeg = eeg.EEG_nopert_onset;
+    erps = eeg.data;
+    erps = mean(erps, 3);
     eeg_times = eeg.times;
     all_nopert_onset_eeg_times(:, :, i) = eeg_times;
+    all_nopert_onset_erps(:,:,i) = erps;
 end
-eeg_nopert_onset_times_mean = mean(all_nopert_onset_eeg_times, 3);
+nopert_onset_erp_mean = mean(all_nopert_onset_erps, 3);
+nopert_onset_times_mean = mean(all_nopert_onset_eeg_times, 3);
 
 %plot pert erps
 plot_channels = [5 6 18 21 22 23 24]; %central electrodes
-%plot_channels = [30 16 8 19 7 27 29 15 9 20 10]; % right hemisphere electrodes
 figure;
-plot(eeg_pert_onset_times_mean, mean(pert_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
+plot(pert_onset_times_mean, mean(pert_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 hold on;
-plot(eeg_nopert_onset_times_mean, mean(nopert_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
+plot(nopert_onset_times_mean, mean(nopert_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 xlim([-200 800])
 ylim([-3 3])
 title('Perturbation onset ERPs', 'FontSize',30, 'FontWeight','bold')
@@ -66,16 +55,16 @@ fontsize(gca, 24, 'points')
 
 %plot pert erps including individual data
 figure;
-plot(eeg_pert_onset_times_mean, mean(pert_onset_erp_mean(plot_channels, :))', 'LineWidth', 5) % 18 = Cz
+plot(pert_onset_times_mean, mean(pert_onset_erp_mean(plot_channels, :))', 'LineWidth', 5) % 18 = Cz
 hold on;
-plot(eeg_nopert_onset_times_mean, mean(nopert_onset_erp_mean(plot_channels, :))', 'LineWidth', 5) % 18 = Cz
+plot(nopert_onset_times_mean, mean(nopert_onset_erp_mean(plot_channels, :))', 'LineWidth', 5) % 18 = Cz
 hold on;
 for i=1:size(all_nopert_onset_erps, 3)
-    plot(eeg_nopert_onset_times_mean, mean(all_nopert_onset_erps(plot_channels, :, i))', 'LineWidth', 1, 'Color','Red', 'LineStyle','--');
+    plot(nopert_onset_times_mean, mean(all_nopert_onset_erps(plot_channels, :, i))', 'LineWidth', 1, 'Color','Red', 'LineStyle','--');
     hold on;
 end
 for i=1:size(all_nopert_onset_erps, 3)
-    plot(eeg_pert_onset_times_mean, mean(all_pert_onset_erps(plot_channels, :, i))', 'LineWidth', 1, 'Color','Blue', 'LineStyle','--');
+    plot(pert_onset_times_mean, mean(all_pert_onset_erps(plot_channels, :, i))', 'LineWidth', 1, 'Color','Blue', 'LineStyle','--');
     hold on;
 end
 xlim([-200 800])
@@ -90,60 +79,44 @@ l = line([-500 1000],[0 0]); l.Color = 'k';
 %% pertrubation onset - aware vs unaware
 %load the data
 %trials with awareness
-cd('/Users/diskuser/analysis/all_data/eeg/')
-aware_onset_erps = dir('**/*_aware_crit_erps.mat');
-all_aware_onset_erps = [];
-for i=1:length(aware_onset_erps)   
-    file = [aware_onset_erps(i).folder '/' aware_onset_erps(i).name];
-    erps = load(file);
-    erps = erps.ERP_aware_crit;
-    all_aware_onset_erps(:,:,i) = erps;
-end
-aware_onset_erp_mean = mean(all_aware_onset_erps, 3);
-
 aware_onset_eegs = dir('**/*_aware_crit_eeg.mat');
 all_aware_onset_eeg_times = [];
 for i=1:length(aware_onset_eegs)
     file = [aware_onset_eegs(i).folder '/' aware_onset_eegs(i).name];
     eeg = load(file);
     eeg = eeg.EEG_aware_crit;
+    erps = eeg.data;
+    erps = mean(erps, 3);
     eeg_times = eeg.times;
     all_aware_onset_eeg_times(:, :, i) = eeg_times;
+    all_aware_onset_erps(:,:,i) = erps;
 end
-eeg_aware_onset_times_mean = mean(all_aware_onset_eeg_times, 3);
+aware_onset_erp_mean = mean(all_aware_onset_erps, 3);
+aware_onset_times_mean = mean(all_aware_onset_eeg_times, 3);
 
 %trials without awareness
-unaware_onset_erps = dir('**/*_unaware_crit_erps.mat');
-all_unaware_onset_erps = [];
-for i=1:length(unaware_onset_erps)   
-    file = [unaware_onset_erps(i).folder '/' unaware_onset_erps(i).name];
-    erps = load(file);
-    erps = erps.ERP_unaware_crit;
-    all_unaware_onset_erps(:,:,i) = erps;
-end
-unaware_onset_erp_mean = mean(all_unaware_onset_erps, 3);
-
 unaware_onset_eegs = dir('**/*_unaware_crit_eeg.mat');
 all_unaware_onset_eeg_times = [];
+all_unaware_onset_erps = [];
 for i=1:length(unaware_onset_eegs)
     file = [unaware_onset_eegs(i).folder '/' unaware_onset_eegs(i).name];
     eeg = load(file);
     eeg = eeg.EEG_unaware_crit;
+    erps = eeg.data;
+    erps = mean(erps, 3);
     eeg_times = eeg.times;
+    all_unaware_onset_erps(:,:,i) = erps;
     all_unaware_onset_eeg_times(:, :, i) = eeg_times;
 end
-eeg_unaware_onset_times_mean = mean(all_unaware_onset_eeg_times, 3);
+unaware_onset_erp_mean = mean(all_unaware_onset_erps, 3);
+unaware_onset_times_mean = mean(all_unaware_onset_eeg_times, 3);
 
 %plot pert erps
 plot_channels = [18 24 22 21 23]; %central electrodes
-%plot_channels = [30 16 8 19 7 27 29 15 9 20 10]; % right hemisphere electrodes
-%plot_channels = [1 2 11 3 17 4 12]; % left hemisphere electrodes
-%plot_channels = [1 2 17]; %posterior 
-%plot_chanels = 1:32;
 figure;
-plot(eeg_aware_onset_times_mean, mean(aware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
+plot(aware_onset_times_mean, mean(aware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 hold on
-plot(eeg_unaware_onset_times_mean, mean(unaware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
+plot(unaware_onset_times_mean, mean(unaware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 xlim([-200 800])
 ylim([-1 1])
 title('Perturbation onset ERPs (critical trial awareness)', 'FontSize',30, 'FontWeight','bold')
@@ -157,13 +130,13 @@ fontsize(gca, 24, 'points');
 %plot including control data
 plot_channels = [18 24 22 21 23]; %central electrodes
 figure;
-plot(eeg_aware_onset_times_mean, mean(aware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3)
+plot(aware_onset_times_mean, mean(aware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3)
 hold on
-plot(eeg_unaware_onset_times_mean, mean(unaware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3)
+plot(unaware_onset_times_mean, mean(unaware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3)
 hold on
-plot(eeg_nopert_onset_times_mean, mean(nopert_onset_erp_mean(plot_channels, :))', 'LineWidth', 3)
+plot(nopert_onset_times_mean, mean(nopert_onset_erp_mean(plot_channels, :))', 'LineWidth', 3)
 xlim([-200 800])
-ylim([-3 3])
+ylim([-1 1])
 title('Perturbation onset ERPs (critical trial awareness)', 'FontSize',30, 'FontWeight','bold')
 xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold')
 ylabel('Voltage (µV)', 'FontSize',30, 'FontWeight','bold')
@@ -174,16 +147,16 @@ fontsize(gca, 24, 'points');
 
 %plot pert erps including individual data
 figure;
-plot(eeg_aware_onset_times_mean, mean(aware_onset_erp_mean(plot_channels, :))', 'LineWidth', 5) % 18 = Cz
+plot(aware_onset_times_mean, mean(aware_onset_erp_mean(plot_channels, :))', 'LineWidth', 5) % 18 = Cz
 hold on;
-plot(eeg_unaware_onset_times_mean, mean(unaware_onset_erp_mean(plot_channels, :))', 'LineWidth', 5) % 18 = Cz
+plot(unaware_onset_times_mean, mean(unaware_onset_erp_mean(plot_channels, :))', 'LineWidth', 5) % 18 = Cz
 hold on;
 for i=1:size(all_unaware_onset_erps, 3)
-    plot(eeg_unaware_onset_times_mean, mean(all_unaware_onset_erps(plot_channels, :, i))', 'LineWidth', 1, 'Color','Red', 'LineStyle','--');
+    plot(unaware_onset_times_mean, mean(all_unaware_onset_erps(plot_channels, :, i))', 'LineWidth', 1, 'Color','Red', 'LineStyle','--');
     hold on;
 end
 for i=1:size(all_aware_onset_erps, 3)
-    plot(eeg_aware_onset_times_mean, mean(all_aware_onset_erps(plot_channels, :, i))', 'LineWidth', 1, 'Color','Blue', 'LineStyle','--');
+    plot(aware_onset_times_mean, mean(all_aware_onset_erps(plot_channels, :, i))', 'LineWidth', 1, 'Color','Blue', 'LineStyle','--');
     hold on;
 end
 xlim([-200 800])
@@ -196,19 +169,12 @@ l = line([0 0],[-5 5]); l.Color = 'k';
 l = line([-500 1000],[0 0]); l.Color = 'k';
 
 %which channel locations have the biggest differences?
-figure;
-timtopo(aware_onset_erp_mean, eeg.chanlocs, 'plottimes', [100 200 300 400 500]);
-hold on;
-timtopo(unaware_onset_erp_mean, eeg.chanlocs, 'plottimes', [100 200 300 400 500 600 700]);
-
 difference = aware_onset_erp_mean - unaware_onset_erp_mean;
-timtopo(difference, eeg.chanlocs, 'plottimes', [100 200 300 400 500]);
-
 %consruct scalp maps for aware/unaware and their difference
 %at relevant times: 150 200 250 ms
-index150 = find(eeg_aware_onset_times_mean == 0);
-index200 = find(eeg_aware_onset_times_mean == 200);
-index250 = find(eeg_aware_onset_times_mean == 250);
+index150 = find(aware_onset_times_mean == 0);
+index200 = find(aware_onset_times_mean == 200);
+index250 = find(aware_onset_times_mean == 250);
 figure;
 subplot(3, 3, 1);
 topoplot(difference(:, index150), eeg.chanlocs)
