@@ -10,6 +10,7 @@ for i = 1:height(all_data)
     control = contains(filename, 'control');
     participant_id = strsplit(all_data(i).name, '_');
     participant_id = {participant_id{1}};
+    participant_id = str2double(extract(participant_id, digitsPattern));
 
     %load the data
     data = load(filename);
@@ -28,6 +29,9 @@ for i = 1:height(all_data)
     end
     times = data.times;
     erps = data.data; %electrodes x voltage at time points x trials
+    events = struct2table(data.event);
+    trial = events(contains(events.type, {'Trial'}),:);
+    trial = str2double(extractAfter(trial.type, '_'));
 
     %average accross electrodes, use central electrodes only (Cz, FC1, FC2, CP1, CP2)
     select_channels = [18 21 22 23 24];
@@ -37,8 +41,8 @@ for i = 1:height(all_data)
 
     %select relevant time windows
     times_erps = [times; erps];
-    aan = times_erps(:,times_erps(1,:) >= 100 & times_erps(1,:) <= 150);
-    lp = times_erps(:,times_erps(1,:) >= 300 & times_erps(1,:) <= 500);
+    aan = times_erps(:,times_erps(1,:) >= 100 & times_erps(1,:) <= 160);
+    lp = times_erps(:,times_erps(1,:) >= 250 & times_erps(1,:) <= 460);
 
     %remove times from data structure
     aan = aan(2:end, :);
@@ -53,7 +57,6 @@ for i = 1:height(all_data)
     participant_id = repmat(participant_id, [l 1]);
     aware = repmat(aware, [l 1]);
     control = repmat(control, [l 1]);
-    trial = (1:l)';
     results = table(participant_id, trial, control, aware, mean_aan, mean_lp);
     all_results = [all_results; results];
 end
@@ -61,7 +64,7 @@ end
 save("awareness_results.mat", "all_results");
 
 %% control trials
-cd('/Users/diskuser/analysis/eeg_data/main/eeg/')
+cd('/Users/diskuser/analysis/all_data/eeg/')
 all_data = dir('**/*pert_onset_eeg.mat');
 all_results = table();
 
@@ -71,6 +74,7 @@ for i = 1:height(all_data)
     participant_id = strsplit(all_data(i).name, '_');
     participant_id = {participant_id{1}};
     t = [filename ' ' participant_id ' ' has_pert];
+    participant_id = str2double(extract(participant_id, digitsPattern));
 
     %load the data
     data = load(filename);
@@ -81,6 +85,9 @@ for i = 1:height(all_data)
     end
     times = data.times;
     erps = data.data; %electrodes x voltage at time points x trials
+    events = struct2table(data.event);
+    trial = events(contains(events.type, {'Trial'}),:);
+    trial = str2double(extractAfter(trial.type, '_'));
 
     %average accross electrodes, use central electrodes only (Cz, FC1, FC2, CP1, CP2)
     select_channels = [18 21 22 23 24];
@@ -90,8 +97,8 @@ for i = 1:height(all_data)
 
     %select relevant time windows
     times_erps = [times; erps];
-    aan = times_erps(:,times_erps(1,:) >= 100 & times_erps(1,:) <= 150);
-    lp = times_erps(:,times_erps(1,:) >= 300 & times_erps(1,:) <= 500);
+    aan = times_erps(:,times_erps(1,:) >= 100 & times_erps(1,:) <= 160);
+    lp = times_erps(:,times_erps(1,:) >= 250 & times_erps(1,:) <= 460);
 
     %remove times from data structure
     aan = aan(2:end, :);
@@ -105,7 +112,6 @@ for i = 1:height(all_data)
     l = length(mean_aan);
     participant_id = repmat(participant_id, [l 1]);
     has_pert = repmat(has_pert, [l 1]);
-    trial = (1:l)';
     results = table(participant_id, trial, has_pert, mean_aan, mean_lp);
     all_results = [all_results; results];
 end

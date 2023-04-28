@@ -1,9 +1,9 @@
 %load the data individually
-%response_sound_data = load('/Users/diskuser/analysis/all_data/experiment/S8/S8_block1_PertrurbExpPilot_matched.mat');
-%set_file = '/Users/diskuser/analysis/eeg_data/main/eeg/S8-2022-10-31T175508/S8_matched.set';
+response_sound_data = load('/Users/diskuser/analysis/all_data/experiment/S8/S8_block1_PertrurbExpPilot_matched.mat');
+set_file = '/Users/diskuser/analysis/all_data/eeg/S8/S8_matched.set';
 %or do batch processing
-set_file = [path '/' participant_id '_matched.set'];
-response_sound_data = load(['/Users/diskuser/analysis/all_data/experiment/' participant_id '/' participant_id '_block1_PertrurbExpPilot_matched.mat']);
+%set_file = [path '/' participant_id '_matched.set'];
+%response_sound_data = load(['/Users/diskuser/analysis/all_data/experiment/' participant_id '/' participant_id '_block1_PertrurbExpPilot_matched.mat']);
 
 responses = response_sound_data.whole_data;
 audio = response_sound_data.audapter_data;
@@ -92,6 +92,12 @@ for i=1:n_markers
             new_event = table(latency, type);
             events = [events; new_event];
         end
+
+        %mark trial number in the eeg signal
+        type = {['Trial_' num2str(current_trial)]};
+        latency = pert_start;
+        new_event = table(latency, type);
+        events = [events; new_event]; 
     end
 end
 

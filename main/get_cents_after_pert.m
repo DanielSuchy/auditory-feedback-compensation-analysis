@@ -52,12 +52,10 @@ for i = 1:height(all_data)
     all_data.pitch{i} = time_pitch(:, 2);
     pitch_60_800 = time_pitch(time_pitch(:,1) > 0.06, :);
     all_data.pitch_60_800(i) = mean(pitch_60_800(:, 2), 'omitnan');
-    pitch_minus200_0 = time_pitch(time_pitch(:,1) > -0.2 & time_pitch(:,1) < 0, :);
-    all_data.pitch_minus200_0(i) = mean(pitch_minus200_0(:, 2), 'omitnan');
-    pitch_200_400 = time_pitch(time_pitch(:,1) > 0.2 & time_pitch(:,1) < 0.4, :);
-    all_data.pitch_200_400(i) = mean(pitch_200_400(:, 2), 'omitnan');
-    pitch_400_800 = time_pitch(time_pitch(:,1) > 0.4 & time_pitch(:,1) < 0.8, :);
-    all_data.pitch_400_800(i) = mean(pitch_400_800(:, 2), 'omitnan');
+    pitch_100_160 = time_pitch(time_pitch(:,1) > 0.1 & time_pitch(:,1) < 0.160, :);
+    all_data.pitch_100_160(i) = mean(pitch_100_160(:, 2), 'omitnan');
+    pitch_250_460 = time_pitch(time_pitch(:,1) > 0.250 & time_pitch(:,1) < 0.460, :);
+    all_data.pitch_250_460(i) = mean(pitch_250_460(:, 2), 'omitnan');
 end
 
 %save the data
