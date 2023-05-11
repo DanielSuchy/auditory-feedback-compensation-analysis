@@ -25,6 +25,5 @@ for participant = 1:length(participant_folders)
     %match_audapter_to_eeg;
     %mark_pert_onset;
     %preprocess;
-    %extract_erps;
-    prepare_massunivariate;
+    extract_erps;
 end

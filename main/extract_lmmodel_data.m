@@ -35,12 +35,12 @@ for i = 1:height(all_data)
 
     %average accross electrodes, use central electrodes only (Cz, FC1, FC2, CP1, CP2)
     select_channels = [18 21 22 23 24];
-    erps = erps(select_channels, :, :);
-    erps = mean(erps);
-    erps = squeeze(erps)'; %makes it trials x average voltage at time points
+    mean_erps = erps(select_channels, :, :);
+    mean_erps = mean(mean_erps);
+    mean_erps = squeeze(mean_erps)'; %makes it trials x average voltage at time points
 
     %select relevant time windows
-    times_erps = [times; erps];
+    times_erps = [times; mean_erps];
     aan = times_erps(:,times_erps(1,:) >= 100 & times_erps(1,:) <= 160);
     lp = times_erps(:,times_erps(1,:) >= 250 & times_erps(1,:) <= 460);
 
@@ -57,7 +57,8 @@ for i = 1:height(all_data)
     participant_id = repmat(participant_id, [l 1]);
     aware = repmat(aware, [l 1]);
     control = repmat(control, [l 1]);
-    results = table(participant_id, trial, control, aware, mean_aan, mean_lp);
+    erps = permute(erps, [3 1 2]);
+    results = table(participant_id, trial, control, aware, mean_aan, mean_lp, erps);
     all_results = [all_results; results];
 end
 
@@ -91,12 +92,12 @@ for i = 1:height(all_data)
 
     %average accross electrodes, use central electrodes only (Cz, FC1, FC2, CP1, CP2)
     select_channels = [18 21 22 23 24];
-    erps = erps(select_channels, :, :);
-    erps = mean(erps);
-    erps = squeeze(erps)'; %makes it trials x average voltage at time points
+    mean_erps = erps(select_channels, :, :);
+    mean_erps = mean(mean_erps);
+    mean_erps = squeeze(mean_erps)'; %makes it trials x average voltage at time points
 
     %select relevant time windows
-    times_erps = [times; erps];
+    times_erps = [times; mean_erps];
     aan = times_erps(:,times_erps(1,:) >= 100 & times_erps(1,:) <= 160);
     lp = times_erps(:,times_erps(1,:) >= 250 & times_erps(1,:) <= 460);
 

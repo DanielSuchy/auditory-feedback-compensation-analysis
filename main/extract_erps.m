@@ -8,6 +8,7 @@
 set_file = [path '/' participant_id '_ica_nolowpass.set'];
 
 EEG = pop_loadset(set_file);
+EEG = pop_resample(EEG, 100); %downsample to 100 Hz for mass univariate analysis
 
 %% Perturbation onset - bigpert vs nopert
 % epoch, baseline removal, and artifact rejection
