@@ -6,27 +6,26 @@ all_data = dir('**/*aware*eeg.mat');
 all_results = table();
 for i = 1:height(all_data)
     filename = [all_data(i).folder '/' all_data(i).name];
-    aware = ~contains(filename, 'unaware');
     control = contains(filename, 'control');
+
+    if contains(filename, 'aware3')
+        aware = 3;
+    elseif contains(filename, 'aware2')
+        aware = 2;
+    elseif contains(filename, 'aware1')
+        aware = 1;
+    else
+        aware = 0;
+    end
+
     participant_id = strsplit(all_data(i).name, '_');
     participant_id = {participant_id{1}};
     participant_id = str2double(extract(participant_id, digitsPattern));
 
     %load the data
     data = load(filename);
+    data = data.erp_data;
 
-    if aware && control
-       data = data.EEG_aware_control;
-       if height(data) == 0 %the participant does not have any trials of this type, e.g. false alarms, this is ok
-        continue; 
-       end
-    elseif aware && ~control
-       data = data.EEG_aware_crit;
-    elseif ~aware && control
-       data = data.EEG_unaware_control;
-    elseif ~aware && ~control
-       data = data.EEG_unaware_crit;
-    end
     times = data.times;
     erps = data.data; %electrodes x voltage at time points x trials
     events = struct2table(data.event);
@@ -41,8 +40,8 @@ for i = 1:height(all_data)
 
     %select relevant time windows
     times_erps = [times; mean_erps];
-    aan = times_erps(:,times_erps(1,:) >= 100 & times_erps(1,:) <= 160);
-    lp = times_erps(:,times_erps(1,:) >= 250 & times_erps(1,:) <= 460);
+    aan = times_erps(:,times_erps(1,:) >= 120 & times_erps(1,:) <= 180);
+    lp = times_erps(:,times_erps(1,:) >= 300 & times_erps(1,:) <= 500);
 
     %remove times from data structure
     aan = aan(2:end, :);
@@ -98,8 +97,8 @@ for i = 1:height(all_data)
 
     %select relevant time windows
     times_erps = [times; mean_erps];
-    aan = times_erps(:,times_erps(1,:) >= 100 & times_erps(1,:) <= 160);
-    lp = times_erps(:,times_erps(1,:) >= 250 & times_erps(1,:) <= 460);
+    aan = times_erps(:,times_erps(1,:) >= 120 & times_erps(1,:) <= 180);
+    lp = times_erps(:,times_erps(1,:) >= 300 & times_erps(1,:) <= 500);
 
     %remove times from data structure
     aan = aan(2:end, :);

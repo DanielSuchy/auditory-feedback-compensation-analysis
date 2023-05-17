@@ -38,8 +38,8 @@ hold on;
 plot(results(1,:).relative_time_points{:} * 1000, mean(aware_cents, 'omitnan'), 'LineWidth',3);
 hold on;
 plot(results(1,:).relative_time_points{:} * 1000, mean(unaware_cents, 'omitnan'), 'LineWidth',3);
-l = line([0 0],[-10 2]); l.Color = 'b';
-l = line([200 200],[-10 2]); l.Color = 'r';
+l = line([0 0],[-10 3]); l.Color = 'b';
+l = line([200 200],[-10 3]); l.Color = 'r';
 title('Time course of vocal adaptation', 'FontSize',30, 'FontWeight','bold')
 xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold')
 ylabel('Mean adaptation magnitude (cents)', 'FontSize',30, 'FontWeight','bold')
@@ -48,23 +48,55 @@ fontsize(gca, 24, 'points');
 
 %% overlap vocalization and ERP timecourse
 %load the data
-%trials with awareness
+%trials with pert onset
 cd('/Users/diskuser/analysis/all_data/eeg/')
-aware_onset_eegs = dir('**/*_aware_crit_eeg.mat');
-all_aware_onset_eeg_times = [];
-all_aware_onset_erps = [];
-for i=1:length(aware_onset_eegs)
-    file = [aware_onset_eegs(i).folder '/' aware_onset_eegs(i).name];
+pert_onset_eegs = dir('**/*_aware1*.mat');
+all_aware1_times = [];
+all_aware1_erps = [];
+for i=1:length(pert_onset_eegs)
+    file = [pert_onset_eegs(i).folder '/' pert_onset_eegs(i).name];
     eeg = load(file);
-    eeg = eeg.EEG_aware_crit;
+    eeg = eeg.erp_data;
     erps = eeg.data;
     erps = mean(erps, 3);
     eeg_times = eeg.times;
-    all_aware_onset_eeg_times(:, :, i) = eeg_times;
-    all_aware_onset_erps(:,:,i) = erps;
+    all_aware1_times(:, :, i) = eeg_times;
+    all_aware1_erps(:,:,i) = erps;
 end
-aware_onset_erp_mean = mean(all_aware_onset_erps, 3);
-aware_onset_times_mean = mean(all_aware_onset_eeg_times, 3);
+aware1_mean = mean(all_aware1_erps, 3);
+aware1_times_mean = mean(all_aware1_times, 3);
+
+pert_onset_eegs = dir('**/*_aware2*.mat');
+all_aware2_times = [];
+all_aware2_erps = [];
+for i=1:length(pert_onset_eegs)
+    file = [pert_onset_eegs(i).folder '/' pert_onset_eegs(i).name];
+    eeg = load(file);
+    eeg = eeg.erp_data;
+    erps = eeg.data;
+    erps = mean(erps, 3);
+    eeg_times = eeg.times;
+    all_aware2_times(:, :, i) = eeg_times;
+    all_aware2_erps(:,:,i) = erps;
+end
+aware2_mean = mean(all_aware2_erps, 3);
+aware2_times_mean = mean(all_aware2_times, 3);
+
+pert_onset_eegs = dir('**/*_aware3*.mat');
+all_aware3_times = [];
+all_aware3_erps = [];
+for i=1:length(pert_onset_eegs)
+    file = [pert_onset_eegs(i).folder '/' pert_onset_eegs(i).name];
+    eeg = load(file);
+    eeg = eeg.erp_data;
+    erps = eeg.data;
+    erps = mean(erps, 3);
+    eeg_times = eeg.times;
+    all_aware3_times(:, :, i) = eeg_times;
+    all_aware3_erps(:,:,i) = erps;
+end
+aware3_mean = mean(all_aware3_erps, 3);
+aware3_times_mean = mean(all_aware3_times, 3);
 
 %trials without awareness
 unaware_onset_eegs = dir('**/*_unaware_crit_eeg.mat');
@@ -73,7 +105,7 @@ all_unaware_onset_erps = [];
 for i=1:length(unaware_onset_eegs)
     file = [unaware_onset_eegs(i).folder '/' unaware_onset_eegs(i).name];
     eeg = load(file);
-    eeg = eeg.EEG_unaware_crit;
+    eeg = eeg.erp_data;
     erps = eeg.data;
     erps = mean(erps, 3);
     eeg_times = eeg.times;
@@ -87,19 +119,21 @@ unaware_onset_times_mean = mean(all_unaware_onset_eeg_times, 3);
 plot_channels = [18 24 22 21 23]; %central electrodes
 figure;
 subplot(2,1,1)
-plot(aware_onset_times_mean, mean(aware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
+plot(aware1_times_mean, mean(aware1_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
+hold on
+plot(aware2_times_mean, mean(aware2_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
+hold on
+plot(aware3_times_mean, mean(aware3_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 hold on
 plot(unaware_onset_times_mean, mean(unaware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 xlim([-200 800])
-ylim([-1 1])
+ylim([-3 3])
 title('Perturbation onset ERPs (critical trial awareness)', 'FontSize',30, 'FontWeight','bold')
 xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold')
 ylabel('Voltage (µV)', 'FontSize',30, 'FontWeight','bold')
 l = line([0 0],[-5 5]); l.Color = 'k';
 l = line([-500 1000],[0 0]); l.Color = 'k';
-fill([100 100.0001 159.9999 160], [-1 1 1 -1], 'y', FaceAlpha=0.2)
-fill([250 250.0001 459.9999 460], [-1 1 1 -1], 'y', FaceAlpha=0.2)
-legend('aware', 'unaware')
+%legend('aware', 'unaware')
 fontsize(gca, 24, 'points');
 
 subplot(2,1,2)
@@ -121,44 +155,40 @@ legend('all valid trials', '0-cent trials', '200-cent trials', 'aware threshold 
 fontsize(gca, 24, 'points');
 
 %% correlate vocal adaptations with ERPs
-results = results(:, [1 2 20 21]);
+results = results(:, [1 2 20:23]);
 
 erps_crit = load("/Users/diskuser/analysis/all_data/eeg/awareness_results.mat");
 erps_crit = erps_crit.all_results;
 erps_crit = renamevars(erps_crit, 'participant_id', 'participant');
-erps_and_adaptations = innerjoin(erps_crit, results);
+erps_crit.erps = []; %fitlme function cannot work with this
+
+%use only valid erp trials
+results.key = string([num2str(results.participant), repmat(' ', [height(results) 1]), num2str(results.trial)]);
+erps_crit.key = string([num2str(erps_crit.participant), repmat(' ', [height(erps_crit) 1]), num2str(erps_crit.trial)]);
+erps_and_adaptations = results(ismember(erps_crit.key, intersect(erps_crit.key, results.key)), :);
+erps_and_adaptations = innerjoin(erps_and_adaptations, erps_crit, Keys='key');
+
+%erps_and_adaptations = innerjoin(erps_crit, results);
 
 
 erps_and_adaptations = erps_and_adaptations(erps_and_adaptations.control == 0, :);
 
-scatter(erps_and_adaptations.mean_aan, erps_and_adaptations.pitch_250_460)
+scatter(erps_and_adaptations.mean_aan, erps_and_adaptations.pitch_120_180)
 
 %prepare variables for lme
 erps_and_adaptations.mean_aan = double(erps_and_adaptations.mean_aan);
 erps_and_adaptations.mean_lp = double(erps_and_adaptations.mean_lp);
 
 %fit linear mixed model
-lme = fitlme(erps_and_adaptations, 'pitch_250_460~mean_aan+(1|participant)');
-lme
-lme = fitlme(erps_and_adaptations, 'pitch_100_160~mean_aan+(1|participant)');
-lme
-lme = fitlme(erps_and_adaptations, 'pitch_250_460~mean_lp+(1|participant)');
-lme
-lme = fitlme(erps_and_adaptations, 'pitch_100_160~mean_lp+(1|participant)');
+lme = fitlme(erps_and_adaptations, 'pitch_120_180~mean_aan+(1|participant_erps_crit)');
 lme
 
 %fit linear mixed model with direction
-erps_and_adaptations.pitch_100_160_direction = nan(height(erps_and_adaptations), 1); 
-erps_and_adaptations.pitch_250_460_direction = nan(height(erps_and_adaptations), 1);
-erps_and_adaptations(erps_and_adaptations.pitch_100_160 > 0, :).pitch_100_160_direction = ones(height(erps_and_adaptations(erps_and_adaptations.pitch_100_160 > 0, :)), 1);
-erps_and_adaptations(erps_and_adaptations.pitch_100_160 < 0, :).pitch_100_160_direction = zeros(height(erps_and_adaptations(erps_and_adaptations.pitch_100_160 < 0, :)), 1);
-erps_and_adaptations(erps_and_adaptations.pitch_250_460 > 0, :).pitch_250_460_direction = ones(height(erps_and_adaptations(erps_and_adaptations.pitch_250_460 > 0, :)), 1);
-erps_and_adaptations(erps_and_adaptations.pitch_250_460 < 0, :).pitch_250_460_direction = zeros(height(erps_and_adaptations(erps_and_adaptations.pitch_250_460 < 0, :)), 1);
-erps_and_adaptations.pitch_100_160 = abs(erps_and_adaptations.pitch_100_160);
-erps_and_adaptations.pitch_250_460 = abs(erps_and_adaptations.pitch_250_460);
+erps_and_adaptations.pitch_120_180_direction = nan(height(erps_and_adaptations), 1); 
+erps_and_adaptations(erps_and_adaptations.pitch_120_180 > 0, :).pitch_120_180_direction = ones(height(erps_and_adaptations(erps_and_adaptations.pitch_120_180 > 0, :)), 1);
+erps_and_adaptations(erps_and_adaptations.pitch_120_180 < 0, :).pitch_120_180_direction = zeros(height(erps_and_adaptations(erps_and_adaptations.pitch_120_180 < 0, :)), 1);
+erps_and_adaptations.pitch_120_180 = abs(erps_and_adaptations.pitch_120_180);
 
-lme = fitlme(erps_and_adaptations, 'pitch_250_460~mean_aan*pitch_250_460_direction+(1|participant)');
-lme
-lme = fitlme(erps_and_adaptations, 'pitch_100_160~mean_aan*pitch_100_160_direction+(1|participant)');
+lme = fitlme(erps_and_adaptations, 'pitch_120_180~mean_aan*pitch_120_180_direction+(1|participant)');
 lme
 

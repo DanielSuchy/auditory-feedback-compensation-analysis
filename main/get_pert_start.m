@@ -22,7 +22,7 @@ for trial = 1:height(audapter_data)
     t_axis = 0 : frame_dur : frame_dur * (size(audapter_data(trial).fmts, 1) - 1); %time axis for the duration of the vocalization
     if length(t_axis) ~= length(ost_status)
         disp('ost data failed to load')
-        return
+        %return
     end
     
     %calculate perturbation start and end

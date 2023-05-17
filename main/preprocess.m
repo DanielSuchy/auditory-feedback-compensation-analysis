@@ -57,11 +57,12 @@ if run_ica == 1
     EEG = pop_chanedit(EEG, 'eval','chans = pop_chancenter( chans, [],[]);');
 
     %epoch and remove baseline
-    EEG = pop_epoch(EEG, {'NoPertOnset' 'PertOnset' 'PertOnset_aware' 'PertOnset_unaware'  }, [-0.5  1], 'epochinfo', 'yes');
+    EEG = pop_epoch(EEG, {'NoPertOnset' 'PertOnset' 'PertOnset_aware1' ...
+        'PertOnset_aware2' 'PertOnset_aware3' 'PertOnset_unaware'  }, [-0.5  1], 'epochinfo', 'yes');
     EEG = pop_rmbase( EEG, [-500 0] ,[]);
 
     % run ICA
-    %EEG = pop_runica(EEG, 'extended',1,'interupt','on');    
+    EEG = pop_runica(EEG, 'extended',1,'interupt','on');    
     
     % interpolate channels
     EEG = pop_interp(EEG, orign_chanlocs, 'spherical');
@@ -71,9 +72,9 @@ if run_ica == 1
     % EEG = pop_multifit(EEG, [1:size(EEG.icaact, 1)], 'dipoles', 2, 'threshold', 100);
     
     % IC label
-    %EEG = pop_iclabel(EEG, 'default');
-    %brainIdx  = find(EEG.etc.ic_classification.ICLabel.classifications(:,1) >= 0.7); % find which components are classified as brain-based with this probability
-    %EEG = pop_subcomp(EEG, brainIdx, 0, 1);
+    EEG = pop_iclabel(EEG, 'default');
+    brainIdx  = find(EEG.etc.ic_classification.ICLabel.classifications(:,1) >= 0.7); % find which components are classified as brain-based with this probability
+    EEG = pop_subcomp(EEG, brainIdx, 0, 1);
     %EEG.etc.ic_classification.ICLabel.classifications = EEG.etc.ic_classification.ICLabel.classifications(brainIdx,:); % update IC label info
     % if using DIPFIT, this can be something like:
         % rvList    = [EEG.dipfit.model.rv]; % residual variances
@@ -85,6 +86,6 @@ if run_ica == 1
     
     EEG = pop_interp(EEG, orign_chanlocs, 'spherical');
 
-    savename = [path '/' participant_id '_ica_nolowpass.set'];
+    savename = [path '/' participant_id '_ica.set'];
     EEG = pop_saveset(EEG, 'filename',savename);
 end

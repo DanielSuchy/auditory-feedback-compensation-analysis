@@ -20,5 +20,9 @@ magnitudes = unique(pert_trials.pert_magnitude, 'stable');
 result = table(participant, aware_trial_count, total_trial_count, actual_threshold, attempted_threshold, magnitudes);
 result
 
+disp(['actual threshold: ', num2str(mean(result.actual_threshold)) ...
+    ' attempted threshold: ' num2str(mean(result.attempted_threshold)) ...
+    ' mean perturbation: ' num2str(mean(result.magnitudes))]);
+
 false_alarms = responses(responses.pert_magnitude == 0.0001 & responses.awareness > 0, :);
 height(false_alarms) / height(responses)

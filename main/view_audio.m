@@ -3,6 +3,10 @@ clear;
 %% load the data
 results = load('/Users/diskuser/analysis/all_data/experiment/all_data_final.mat');
 results = results.all_data;
+erp_results = load('/Users/diskuser/analysis/all_data/eeg/awareness_results.mat');
+erp_results = erp_results.all_results;
+erp_results.erps = []; %lme does not work if this column is in the table
+erp_results = renamevars(erp_results,'participant_id','participant'); %keep column names the same for joining tables
 
 %exclude participants
 
@@ -102,7 +106,7 @@ lme2
 
 %lme with continuous measurement
 tbl3 = results(results.pert_magnitude ~= 2, [1 4 5 19]);
-tbl3.awareness = tbl3.awareness > 0;
+%tbl3.awareness = tbl3.awareness > 0;
 tbl3.direction = nan(height(tbl3), 1);
 tbl3(tbl3.pitch_60_800 > 0, :).direction = ones(height(tbl3(tbl3.pitch_60_800 > 0, :)), 1);
 tbl3(tbl3.pitch_60_800 < 0, :).direction = zeros(height(tbl3(tbl3.pitch_60_800 < 0, :)), 1);
@@ -111,18 +115,30 @@ tbl3.has_pert = ones(height(tbl3), 1);
 tbl3(tbl3.pert_magnitude == 0.0001, :).has_pert = zeros(height(tbl3(tbl3.pert_magnitude == 0.0001, :)), 1);
 lme3 = fitlme(tbl3, 'pitch_60_800~has_pert*awareness*direction+(1|participant)');
 lme3
+plotResiduals(lme3, 'caseorder')
 
-tbl4 = results(results.pert_magnitude > 0.0001 & results.pert_magnitude < 2, [1 4 5 20:22]);
+tbl4 = results(results.pert_magnitude > 0.0001 & results.pert_magnitude < 2, [1 4 5 19:23]);
 tbl4.awareness = tbl4.awareness > 0;
 lme4 = fitlme(tbl4, 'pitch_minus200_0~awareness+(1|participant)');
 lme4
 
-lme4 = fitlme(tbl4, 'pitch_200_400~awareness+(1|participant)');
+lme4 = fitlme(tbl4, 'pitch_400_700~awareness+(1|participant)');
 lme4
 
+%lme only with trials that are valid for both auditory and erp analysis
+results = results(:, [1 2 4 5 19]);
+results.key = string([num2str(results.participant), repmat(' ', [height(results) 1]), num2str(results.trial)]);
+erp_results.key = string([num2str(erp_results.participant), repmat(' ', [height(erp_results) 1]), num2str(erp_results.trial)]);
+valid_results = results(ismember(erp_results.key, intersect(erp_results.key, results.key)), :);
 
-lme4 = fitlme(tbl4, 'pitch_400_800~awareness+(1|participant)');
-lme4
+valid_results.direction = nan(height(valid_results), 1);
+valid_results(valid_results.pitch_60_800 > 0, :).direction = ones(height(valid_results(valid_results.pitch_60_800 > 0, :)), 1);
+valid_results(valid_results.pitch_60_800 < 0, :).direction = zeros(height(valid_results(valid_results.pitch_60_800 < 0, :)), 1);
+valid_results.pitch_60_800 = abs(valid_results.pitch_60_800);
+valid_results.has_pert = ones(height(valid_results), 1);
+valid_results(valid_results.pert_magnitude == 0.0001, :).has_pert = zeros(height(valid_results(valid_results.pert_magnitude == 0.0001, :)), 1);
+lme3 = fitlme(valid_results, 'pitch_60_800~has_pert*awareness*direction+(1|participant)');
+lme3
 
 %% view the data
 histogram(results.difference_in_cents)

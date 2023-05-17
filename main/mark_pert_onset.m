@@ -1,9 +1,9 @@
 %load the data individually
-response_sound_data = load('/Users/diskuser/analysis/all_data/experiment/S8/S8_block1_PertrurbExpPilot_matched.mat');
-set_file = '/Users/diskuser/analysis/all_data/eeg/S8/S8_matched.set';
+%response_sound_data = load('/Users/diskuser/analysis/all_data/experiment/S15/S15_block1_PertrurbExpPilot_matched.mat');
+%set_file = '/Users/diskuser/analysis/all_data/eeg/S15/S15_matched.set';
 %or do batch processing
-%set_file = [path '/' participant_id '_matched.set'];
-%response_sound_data = load(['/Users/diskuser/analysis/all_data/experiment/' participant_id '/' participant_id '_block1_PertrurbExpPilot_matched.mat']);
+set_file = [path '/' participant_id '_matched.set'];
+response_sound_data = load(['/Users/diskuser/analysis/all_data/experiment/' participant_id '/' participant_id '_block1_PertrurbExpPilot_matched.mat']);
 
 responses = response_sound_data.whole_data;
 audio = response_sound_data.audapter_data;
@@ -67,9 +67,17 @@ for i=1:n_markers
             awareness = events(i+2, :).type;
             if strcmp(awareness, 'awareness0')
                 awareness = 'unaware';
+            elseif strcmp(awareness, 'awareness1')
+                awareness = 'aware1';
+            elseif strcmp(awareness, 'awareness2')
+                awareness = 'aware2';
+            elseif strcmp(awareness, 'awareness3')
+                awareness = 'aware3';
             else
-                awareness = 'aware';
+                disp('awareness rating missing');
+                continue;
             end
+
             type = {['PertOnset_' awareness]};
             latency = pert_start;
             new_event = table(latency, type);
@@ -84,9 +92,17 @@ for i=1:n_markers
             awareness = events(i+2, :).type;
             if strcmp(awareness, 'awareness0')
                 awareness = 'unaware';
+            elseif strcmp(awareness, 'awareness1')
+                awareness = 'aware1';
+            elseif strcmp(awareness, 'awareness2')
+                awareness = 'aware2';
+            elseif strcmp(awareness, 'awareness3')
+                awareness = 'aware3';
             else
-                awareness = 'aware';
+                disp('awareness rating missing');
+                continue;
             end
+
             type = {['NoPertOnset_' awareness]};
             latency = pert_start;
             new_event = table(latency, type);
