@@ -211,26 +211,39 @@ end
 %% aware vs unaware: [0-3] ratings
 %load the data
 %trials with pert onset
+plot_channels = [18 24 22 21 23]; %central electrodes
 cd('/Users/diskuser/analysis/all_data/eeg/')
-pert_onset_eegs = dir('**/*_aware1*.mat');
+pert_onset_eegs = dir('**/*_aware1_crit*.mat');
 all_aware1_times = [];
 all_aware1_erps = [];
+aans1 = [];
+lps1 = [];
 for i=1:length(pert_onset_eegs)
     file = [pert_onset_eegs(i).folder '/' pert_onset_eegs(i).name];
     eeg = load(file);
     eeg = eeg.erp_data;
     erps = eeg.data;
     erps = mean(erps, 3);
-    eeg_times = eeg.times;
-    all_aware1_times(:, :, i) = eeg_times;
+    times = eeg.times;
+    all_aware1_times(:, :, i) = times;
     all_aware1_erps(:,:,i) = erps;
+    erps = mean(erps(plot_channels, :));
+    erps_times = [erps; times];
+    aan = erps_times(1, erps_times(2,:) > 120 & erps_times(2,:) < 180);
+    aan = mean(aan);
+    aans1 = [aans1; aan];
+    lp = erps_times(1, erps_times(2,:) > 300 & erps_times(2,:) < 500);
+    lp = mean(lp);
+    lps1 = [lps1; lp];
 end
 aware1_mean = mean(all_aware1_erps, 3);
 aware1_times_mean = mean(all_aware1_times, 3);
 
-pert_onset_eegs = dir('**/*_aware2*.mat');
+pert_onset_eegs = dir('**/*_aware2_crit*.mat');
 all_aware2_times = [];
 all_aware2_erps = [];
+aans2 = [];
+lps2 = [];
 for i=1:length(pert_onset_eegs)
     file = [pert_onset_eegs(i).folder '/' pert_onset_eegs(i).name];
     eeg = load(file);
@@ -240,13 +253,23 @@ for i=1:length(pert_onset_eegs)
     eeg_times = eeg.times;
     all_aware2_times(:, :, i) = eeg_times;
     all_aware2_erps(:,:,i) = erps;
+    erps = mean(erps(plot_channels, :));
+    erps_times = [erps; times];
+    aan = erps_times(1, erps_times(2,:) > 120 & erps_times(2,:) < 180);
+    aan = mean(aan);
+    aans2 = [aans2; aan];
+    lp = erps_times(1, erps_times(2,:) > 300 & erps_times(2,:) < 500);
+    lp = mean(lp);
+    lps2 = [lps2; lp];
 end
 aware2_mean = mean(all_aware2_erps, 3);
 aware2_times_mean = mean(all_aware2_times, 3);
 
-pert_onset_eegs = dir('**/*_aware3*.mat');
+pert_onset_eegs = dir('**/*_aware3_crit*.mat');
 all_aware3_times = [];
 all_aware3_erps = [];
+aans3 = [];
+lps3 = [];
 for i=1:length(pert_onset_eegs)
     file = [pert_onset_eegs(i).folder '/' pert_onset_eegs(i).name];
     eeg = load(file);
@@ -256,6 +279,14 @@ for i=1:length(pert_onset_eegs)
     eeg_times = eeg.times;
     all_aware3_times(:, :, i) = eeg_times;
     all_aware3_erps(:,:,i) = erps;
+    erps = mean(erps(plot_channels, :));
+    erps_times = [erps; times];
+    aan = erps_times(1, erps_times(2,:) > 120 & erps_times(2,:) < 180);
+    aan = mean(aan);
+    aans3 = [aans3; aan];
+    lp = erps_times(1, erps_times(2,:) > 300 & erps_times(2,:) < 500);
+    lp = mean(lp);
+    lps3 = [lps3; lp];
 end
 aware3_mean = mean(all_aware3_erps, 3);
 aware3_times_mean = mean(all_aware3_times, 3);
@@ -264,6 +295,8 @@ aware3_times_mean = mean(all_aware3_times, 3);
 unaware_onset_eegs = dir('**/*_unaware_crit_eeg.mat');
 all_unaware_onset_eeg_times = [];
 all_unaware_onset_erps = [];
+aans_una = [];
+lps_una = [];
 for i=1:length(unaware_onset_eegs)
     file = [unaware_onset_eegs(i).folder '/' unaware_onset_eegs(i).name];
     eeg = load(file);
@@ -273,13 +306,22 @@ for i=1:length(unaware_onset_eegs)
     eeg_times = eeg.times;
     all_unaware_onset_erps(:,:,i) = erps;
     all_unaware_onset_eeg_times(:, :, i) = eeg_times;
+    erps = mean(erps(plot_channels, :));
+    erps_times = [erps; times];
+    aan = erps_times(1, erps_times(2,:) > 120 & erps_times(2,:) < 180);
+    aan = mean(aan);
+    aans_una = [aans_una; aan];
+    lp = erps_times(1, erps_times(2,:) > 300 & erps_times(2,:) < 500);
+    lp = mean(lp);
+    lps_una = [lps_una; lp];
 end
 unaware_onset_erp_mean = mean(all_unaware_onset_erps, 3);
 unaware_onset_times_mean = mean(all_unaware_onset_eeg_times, 3);
 
 %plot pert erps
-plot_channels = [18 24 22 21 23]; %central electrodes
 figure;
+subplot(3,2,[1 2])
+plot_channels = [18 24 22 21 23]; %central electrodes
 plot(aware1_times_mean, mean(aware1_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 hold on
 plot(aware2_times_mean, mean(aware2_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
@@ -294,8 +336,63 @@ xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold')
 ylabel('Voltage (µV)', 'FontSize',30, 'FontWeight','bold')
 l = line([0 0],[-5 5]); l.Color = 'k';
 l = line([-500 1000],[0 0]); l.Color = 'k';
+area([120 180], [2 2], BaseValue=-2, FaceColor='blue', FaceAlpha=0.1)
+area([300 500], [2 2], BaseValue=-2, FaceColor='red', FaceAlpha=0.1)
 %legend('aware', 'unaware')
 fontsize(gca, 24, 'points');
 
+subplot(3,2,3)
+scatter(1, aans_una, 150, 'filled', 'MarkerFaceColor', 'y', 'MarkerEdgeColor', 'k');
+hold on;
+scatter(2, aans1, 150, 'filled', 'MarkerFaceColor', 'b', 'MarkerEdgeColor', 'k');
+scatter(3, aans2, 150, 'filled', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'k');
+scatter(4, aans3, 150, 'filled', 'MarkerFaceColor', 'g', 'MarkerEdgeColor', 'k');
+scatter(1, mean(aans_una), 300, 'd', 'filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
+scatter(2, mean(aans1), 300, 'd', 'filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
+scatter(3, mean(aans2), 300, 'd', 'filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
+scatter(4, mean(aans3), 300, 'd','filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
+xlim([0.5 4.5]);
+%ylim([-3 3]);
+xlabel('Awareness rating');
+ylabel('Voltage 120-180 ms after perturbation');
+title('Auditory awareness negativity - mean values');
+grid on;
+grid minor;
+xticks([1 2 3 4]);
+xticklabels({'unaware', 'aware 1', 'aware 2', 'aware3'});
+fontsize(gca, 24, 'points');
 
+subplot(3,2,4)
+scatter(1, lps_una, 150, 'filled', 'MarkerFaceColor', 'y', 'MarkerEdgeColor', 'k');
+hold on;
+scatter(2, lps1, 150, 'filled', 'MarkerFaceColor', 'b', 'MarkerEdgeColor', 'k');
+scatter(3, lps2, 150, 'filled', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'k');
+scatter(4, lps3, 150, 'filled', 'MarkerFaceColor', 'g', 'MarkerEdgeColor', 'k');
+scatter(1, mean(lps_una), 300, 'd', 'filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
+scatter(2, mean(lps1), 300, 'd', 'filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
+scatter(3, mean(lps2), 300, 'd', 'filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
+scatter(4, mean(lps3), 300, 'd','filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
+xlim([0.5 4.5]);
+%ylim([-0.25 0.2]);
+xlabel('Awareness rating');
+ylabel('Voltage 300-500 ms after perturbation');
+title('Late positivity - mean values');
+grid on;
+grid minor;
+xticks([1 2 3 4]);
+xticklabels({'unaware', 'aware 1', 'aware 2', 'aware3'});
+fontsize(gca, 24, 'points');
 
+tvalues = load('/Users/diskuser/analysis/all_data/eeg/tvalues_real_data.mat');
+tvalues = tvalues.t_values;
+%scalp maps of t-values for aan
+aan_ts = tvalues(1:32,63:69); %120 - 180 ms
+mean_aan = mean(aan_ts, 2);
+subplot(3,2,5);
+topoplot(mean_aan, eeg.chanlocs);
+
+%scalp maps of t-values for LP
+lp_ts = tvalues(1:32, 81:101);
+mean_lp = mean(lp_ts, 2);
+subplot(3,2,6)
+topoplot(mean_lp, eeg.chanlocs);

@@ -9,11 +9,12 @@ set_file = [path '/' participant_id '_ica.set'];
 
 EEG = pop_loadset(set_file);
 %EEG = pop_resample(EEG, 100); %downsample to 100 Hz for mass univariate analysis
+EEG = pop_eegfiltnew(EEG, 0, 40); %low-pass for better graphs
 
 %% Perturbation onset - bigpert vs nopert
 % epoch, baseline removal, and artifact rejection
-EEG_pert_onset = pop_epoch( EEG, {  'PertOnset'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
-EEG_nopert_onset = pop_epoch( EEG, {  'NoPertOnset'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+EEG_pert_onset = pop_epoch( EEG, {  'PertOnset'  }, [-0.2 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+EEG_nopert_onset = pop_epoch( EEG, {  'NoPertOnset'  }, [-0.2 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
 
 locthresh = 3;
 globthresh = 3;
@@ -36,7 +37,7 @@ aware2_trials_n = sum(strcmp(events.type, 'PertOnset_aware2'));
 aware3_trials_n = sum(strcmp(events.type, 'PertOnset_aware3'));
 
 if unaware_trials_n > 1
-    erp_data = pop_epoch( EEG, {  'PertOnset_unaware'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+    erp_data = pop_epoch( EEG, {  'PertOnset_unaware'  }, [-0.2 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
     erp_data = pop_jointprob(erp_data, 1, [1:32], locthresh, globthresh, 1);
     
     %save the data by participant and trials type
@@ -45,7 +46,7 @@ if unaware_trials_n > 1
 end
 
 if aware1_trials_n > 1
-    erp_data = pop_epoch( EEG, {  'PertOnset_aware1'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+    erp_data = pop_epoch( EEG, {  'PertOnset_aware1'  }, [-0.2 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
     erp_data = pop_jointprob(erp_data, 1, [1:32], locthresh, globthresh, 1);
     
     %save the data by participant and trials type
@@ -54,7 +55,7 @@ if aware1_trials_n > 1
 end
 
 if aware2_trials_n > 1
-    erp_data = pop_epoch( EEG, {  'PertOnset_aware2'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+    erp_data = pop_epoch( EEG, {  'PertOnset_aware2'  }, [-0.2 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
     erp_data = pop_jointprob(erp_data, 1, [1:32], locthresh, globthresh, 1);
     
     %save the data by participant and trials type
@@ -63,7 +64,7 @@ if aware2_trials_n > 1
 end
 
 if aware3_trials_n > 1
-    erp_data = pop_epoch( EEG, {  'PertOnset_aware3'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+    erp_data = pop_epoch( EEG, {  'PertOnset_aware3'  }, [-0.2 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
     erp_data = pop_jointprob(erp_data, 1, [1:32], locthresh, globthresh, 1);
     
     %save the data by participant and trials type
@@ -81,7 +82,7 @@ aware2_trials_n = sum(strcmp(events.type, 'NoPertOnset_aware2'));
 aware3_trials_n = sum(strcmp(events.type, 'NoPertOnset_aware3'));
 
 if unaware_trials_n > 1
-    erp_data = pop_epoch( EEG, {  'NoPertOnset_unaware'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+    erp_data = pop_epoch( EEG, {  'NoPertOnset_unaware'  }, [-0.2 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
     erp_data = pop_jointprob(erp_data, 1, [1:32], locthresh, globthresh, 1);
     
     %save the data by participant and trials type
@@ -90,7 +91,7 @@ if unaware_trials_n > 1
 end
 
 if aware1_trials_n > 1
-    erp_data = pop_epoch( EEG, {  'NoPertOnset_aware1'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+    erp_data = pop_epoch( EEG, {  'NoPertOnset_aware1'  }, [-0.2 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
     erp_data = pop_jointprob(erp_data, 1, [1:32], locthresh, globthresh, 1);
     
     %save the data by participant and trials type
@@ -99,7 +100,7 @@ if aware1_trials_n > 1
 end
 
 if aware2_trials_n > 1
-    erp_data = pop_epoch( EEG, {  'NoPertOnset_aware2'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+    erp_data = pop_epoch( EEG, {  'NoPertOnset_aware2'  }, [-0.2 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
     erp_data = pop_jointprob(erp_data, 1, [1:32], locthresh, globthresh, 1);
     
     %save the data by participant and trials type
@@ -108,7 +109,7 @@ if aware2_trials_n > 1
 end
 
 if aware3_trials_n > 1
-    erp_data = pop_epoch( EEG, {  'NoPertOnset_aware3'  }, [-0.5 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
+    erp_data = pop_epoch( EEG, {  'NoPertOnset_aware3'  }, [-0.2 1], 'newname', 'Merged datasets epochs', 'epochinfo', 'yes');
     erp_data = pop_jointprob(erp_data, 1, [1:32], locthresh, globthresh, 1);
     
     %save the data by participant and trials type
