@@ -11,7 +11,7 @@ all_data.mean_f0_before_pert = nan([height(all_data) 1]);
 all_data.stdev_f0_before_pert = nan([height(all_data) 1]);
 
 %fill the new columns
-for i = 1:height(all_data)
+parfor i = 1:height(all_data)
     current_trial = all_data(i, :);
 
     %skip trials with incorrect vocalization
@@ -27,8 +27,8 @@ for i = 1:height(all_data)
     time(time >= current_trial.pert_start_time) = []; %remove time points after pert
     f0_before_pert = f0(1:length(time)); % F0 is estimated for each timepoint
 
-    %get f0 one second before the pertrubation
-    goal_time = time(end) - 1;
+    %get f0 200ms before the pertrubation
+    goal_time = time(end) - 0.2;
     time(time < goal_time) = [];
     f0_before_pert = f0_before_pert(length(f0_before_pert) - length(time) + 1: end);
 

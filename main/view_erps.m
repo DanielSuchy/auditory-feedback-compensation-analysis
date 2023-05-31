@@ -318,19 +318,18 @@ end
 unaware_onset_erp_mean = mean(all_unaware_onset_erps, 3);
 unaware_onset_times_mean = mean(all_unaware_onset_eeg_times, 3);
 
+aware_erps = cat(3, all_aware1_erps, all_aware2_erps, all_aware3_erps);
+aware_mean = mean(aware_erps, 3);
+
 %plot pert erps
 figure;
-subplot(3,2,[1 2])
+erp_plot = subplot(2,3,[1 4]);
 plot_channels = [18 24 22 21 23]; %central electrodes
-plot(aware1_times_mean, mean(aware1_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
-hold on
-plot(aware2_times_mean, mean(aware2_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
-hold on
-plot(aware3_times_mean, mean(aware3_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
+plot(aware1_times_mean, mean(aware_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 hold on
 plot(unaware_onset_times_mean, mean(unaware_onset_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
 xlim([-200 800])
-ylim([-2 2])
+ylim([-1.5 1.5])
 title('Perturbation onset ERPs (critical trial awareness)', 'FontSize',30, 'FontWeight','bold')
 xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold')
 ylabel('Voltage (µV)', 'FontSize',30, 'FontWeight','bold')
@@ -338,45 +337,53 @@ l = line([0 0],[-5 5]); l.Color = 'k';
 l = line([-500 1000],[0 0]); l.Color = 'k';
 area([120 180], [2 2], BaseValue=-2, FaceColor='blue', FaceAlpha=0.1)
 area([300 500], [2 2], BaseValue=-2, FaceColor='red', FaceAlpha=0.1)
-%legend('aware', 'unaware')
+legend('aware', 'unaware')
 fontsize(gca, 24, 'points');
 
-subplot(3,2,3)
-scatter(1, aans_una, 150, 'filled', 'MarkerFaceColor', 'y', 'MarkerEdgeColor', 'k');
-hold on;
-scatter(2, aans1, 150, 'filled', 'MarkerFaceColor', 'b', 'MarkerEdgeColor', 'k');
-scatter(3, aans2, 150, 'filled', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'k');
-scatter(4, aans3, 150, 'filled', 'MarkerFaceColor', 'g', 'MarkerEdgeColor', 'k');
+aanmean_plot = subplot(2,3,2);
+e1 = errorbar(1, mean(aans_una), std(aans_una) / sqrt(length(aans_una)), 'LineWidth', 5, 'MarkerFaceColor', 'r');
+hold on
+e2 = errorbar(2, mean(aans1), std(aans1) / sqrt(length(aans1)), 'LineWidth', 5);
+e3 = errorbar(3, mean(aans2), std(aans2) / sqrt(length(aans2)), 'LineWidth', 5);
+e4 = errorbar(4, mean(aans3), std(aans3) / sqrt(length(aans3)), 'LineWidth', 5);
 scatter(1, mean(aans_una), 300, 'd', 'filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
 scatter(2, mean(aans1), 300, 'd', 'filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
 scatter(3, mean(aans2), 300, 'd', 'filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
 scatter(4, mean(aans3), 300, 'd','filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
-xlim([0.5 4.5]);
-%ylim([-3 3]);
+e1.Color = 'red';
+e2.Color = [0.5, 0.5, 1];
+e3.Color = [0.3, 0.3, 1];
+e4.Color = [0.1, 0.1, 1];
 xlabel('Awareness rating');
 ylabel('Voltage 120-180 ms after perturbation');
-title('Auditory awareness negativity - mean values');
+title('Auditory awareness negativity - mean value');
+xlim([0.5 4.5]);
+xticks([0 1 2 3]);
 grid on;
 grid minor;
 xticks([1 2 3 4]);
 xticklabels({'unaware', 'aware 1', 'aware 2', 'aware3'});
 fontsize(gca, 24, 'points');
 
-subplot(3,2,4)
-scatter(1, lps_una, 150, 'filled', 'MarkerFaceColor', 'y', 'MarkerEdgeColor', 'k');
-hold on;
-scatter(2, lps1, 150, 'filled', 'MarkerFaceColor', 'b', 'MarkerEdgeColor', 'k');
-scatter(3, lps2, 150, 'filled', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'k');
-scatter(4, lps3, 150, 'filled', 'MarkerFaceColor', 'g', 'MarkerEdgeColor', 'k');
+lpmean_plot = subplot(2,3,5);
+e1 = errorbar(1, mean(lps_una), std(lps_una) / sqrt(length(lps_una)), 'LineWidth', 5, 'MarkerFaceColor', 'r');
+hold on
+e2 = errorbar(2, mean(lps1), std(lps1) / sqrt(length(lps1)), 'LineWidth', 5);
+e3 = errorbar(3, mean(lps2), std(lps2) / sqrt(length(lps2)), 'LineWidth', 5);
+e4 = errorbar(4, mean(lps3), std(lps3) / sqrt(length(lps3)), 'LineWidth', 5);
 scatter(1, mean(lps_una), 300, 'd', 'filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
 scatter(2, mean(lps1), 300, 'd', 'filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
 scatter(3, mean(lps2), 300, 'd', 'filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
 scatter(4, mean(lps3), 300, 'd','filled', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'k', 'LineWidth', 5);
-xlim([0.5 4.5]);
-%ylim([-0.25 0.2]);
+e1.Color = 'red';
+e2.Color = [0.5, 0.5, 1];
+e3.Color = [0.3, 0.3, 1];
+e4.Color = [0.1, 0.1, 1];
 xlabel('Awareness rating');
 ylabel('Voltage 300-500 ms after perturbation');
-title('Late positivity - mean values');
+title('Late positivity - mean value');
+xlim([0.5 4.5]);
+xticks([0 1 2 3]);
 grid on;
 grid minor;
 xticks([1 2 3 4]);
@@ -388,11 +395,22 @@ tvalues = tvalues.t_values;
 %scalp maps of t-values for aan
 aan_ts = tvalues(1:32,63:69); %120 - 180 ms
 mean_aan = mean(aan_ts, 2);
-subplot(3,2,5);
+aan_scalp = subplot(2,3,3);
 topoplot(mean_aan, eeg.chanlocs);
+title('AAN - tscores');
+fontsize(gca, 24, 'points');
 
 %scalp maps of t-values for LP
 lp_ts = tvalues(1:32, 81:101);
 mean_lp = mean(lp_ts, 2);
-subplot(3,2,6)
+lp_scalp = subplot(2,3,6);
 topoplot(mean_lp, eeg.chanlocs);
+title('LP - tscores');
+fontsize(gca, 24, 'points');
+
+%adjust positions of the subplots
+erp_plot.Position = erp_plot.Position + [-0.05 0 0.15 0];
+aanmean_plot.Position = aanmean_plot.Position + [0.1 0 0 0];
+lpmean_plot.Position = lpmean_plot.Position + [0.1 0 0 0];
+aan_scalp.Position = aan_scalp.Position + [0.05 0 0 0];
+lp_scalp.Position = lp_scalp.Position + [0.05 0 0 0];

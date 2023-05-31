@@ -22,7 +22,7 @@ disp('extracted F0');
 function filtered_audio = lowpass_filter(audio)
     frequency_cutoff = 500; %Hz
     sample_rate = 16000;
-    for i = 1:length(audio)
+    parfor i = 1:length(audio)
         filtered_audio{i} = lowpass(audio{i}, frequency_cutoff, sample_rate);
     end
 end
@@ -30,7 +30,7 @@ end
 %extract the fundamental frequency
 function [f0s, timepoints] = extract_f0(audio)
     sample_rate = 16000;
-    for i = 1:length(audio)
+    parfor i = 1:length(audio)
         [f0s{i}, timepoints{i}] = pitch(audio{i}, sample_rate, Method="PEF");
     end
 end

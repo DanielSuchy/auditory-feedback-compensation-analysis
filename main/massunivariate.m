@@ -106,7 +106,7 @@ all_data = all_data(all_data.pert_magnitude < 2 & all_data.pert_magnitude > 0.00
 all_data(all_data.pitch_60_800 == 0, :) = [];
 mu_data = all_data(:, [1 5 18]); %data relevant for mass univariate analysis
 
-for sample_i=1:100
+parfor sample_i=1:100
     cents = [];
     for trial_i=1:height(mu_data)
         pitch = cell2mat(mu_data(trial_i, :).pitch);
@@ -148,7 +148,6 @@ for perm_i=1:permutations
     disp(['permutation: ' num2str(perm_i)])
     fake_t_values(perm_i, :) = t_values;
 end
-
 save("real_tvalues.mat", "real_t_values");
 save("fake_tvalues.mat", "fake_t_values");
 
@@ -161,3 +160,18 @@ real_t_values(real_t_values > cutoff)
 plot(real_t_values);
 hold on;
 plot((real_t_values > cutoff) * 3 );
+
+channeighbstructmat = 0;
+real_tfce = limo_tfce(1, real_t_values, channeighbstructmat);
+fake_tfce = limo_tfce(1, fake_t_values, channeighbstructmat);
+fake_tfce = squeeze(fake_tfce);
+tfce_max = max(fake_tfce, [], 2);
+cutoff = prctile(tfce_max, 97.5);
+real_tfce > cutoff
+
+times = all_data(1, :).relative_time_points;
+times = times{1};
+times(real_tfce > cutoff)
+plot(times', real_tfce)
+hold on;
+plot(times', (real_tfce > cutoff) * 3 );

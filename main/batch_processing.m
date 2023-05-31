@@ -15,7 +15,8 @@ participant_folders = files([files.isdir]);
 for participant = 1:length(participant_folders)
     path = [participant_folders(participant).folder '/' participant_folders(participant).name];
     participant_id = participant_folders(participant).name;
-    if strcmp(participant_id, 'S2') || strcmp(participant_id, 'S22') || strcmp(participant_id, 'S25')
+    if strcmp(participant_id, 'S2') || strcmp(participant_id, 'S20') || strcmp(participant_id, 'S22') ...
+            || strcmp(participant_id, 'S25') ||  strcmp(participant_id, 'S28')
         continue %skip this participant for now (EEG trigger codes were different)
     end
     cd('/Users/diskuser/analysis/auditory-feedback-compensation-analysis/main/')

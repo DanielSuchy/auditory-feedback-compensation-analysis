@@ -58,8 +58,8 @@ if run_ica == 1
 
     %epoch and remove baseline
     EEG = pop_epoch(EEG, {'NoPertOnset' 'PertOnset' 'PertOnset_aware1' ...
-        'PertOnset_aware2' 'PertOnset_aware3' 'PertOnset_unaware'  }, [-0.2  1], 'epochinfo', 'yes');
-    EEG = pop_rmbase( EEG, [-200 0] ,[]);
+        'PertOnset_aware2' 'PertOnset_aware3' 'PertOnset_unaware'  }, [-0.5  1], 'epochinfo', 'yes');
+    EEG = pop_rmbase( EEG, [-500 0] ,[]);
 
     % run ICA
     EEG = pop_runica(EEG, 'extended',1,'interupt','on');    

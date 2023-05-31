@@ -105,7 +105,7 @@ lme2 = fitlme(tbl2, 'difference_in_cents~has_pert*awareness*direction+(1|partici
 lme2
 
 %lme with continuous measurement
-tbl3 = results(results.pert_magnitude ~= 2, [1 4 5 19]);
+tbl3 = results(results.pert_magnitude ~= 2, [1 4 5 19 22]);
 %tbl3.awareness = tbl3.awareness > 0;
 tbl3.direction = nan(height(tbl3), 1);
 tbl3(tbl3.pitch_60_800 > 0, :).direction = ones(height(tbl3(tbl3.pitch_60_800 > 0, :)), 1);
@@ -113,16 +113,27 @@ tbl3(tbl3.pitch_60_800 < 0, :).direction = zeros(height(tbl3(tbl3.pitch_60_800 <
 tbl3.pitch_60_800 = abs(tbl3.pitch_60_800);
 tbl3.has_pert = ones(height(tbl3), 1);
 tbl3(tbl3.pert_magnitude == 0.0001, :).has_pert = zeros(height(tbl3(tbl3.pert_magnitude == 0.0001, :)), 1);
-lme3 = fitlme(tbl3, 'pitch_60_800~has_pert*awareness*direction+(1|participant)');
+lme3 = fitlme(tbl3, 'pitch_60_800~pitch_minus200_0+has_pert*awareness*direction+(1|participant)');
 lme3
 plotResiduals(lme3, 'caseorder')
 
-tbl4 = results(results.pert_magnitude > 0.0001 & results.pert_magnitude < 2, [1 4 5 19:23]);
-tbl4.awareness = tbl4.awareness > 0;
-lme4 = fitlme(tbl4, 'pitch_minus200_0~awareness+(1|participant)');
+%lme with relative pitch measurement
+tbl4 = results(results.pert_magnitude ~= 2, [1 4 5 19 26]);
+tbl4.has_pert = ones(height(tbl4), 1);
+tbl4(tbl4.pert_magnitude == 0.0001, :).has_pert = zeros(height(tbl4(tbl4.pert_magnitude == 0.0001, :)), 1);
+tbl4(tbl4.has_pert == 0, :) = [];
+lme4 = fitlme(tbl4, 'pitch_relative~awareness+(1|participant)');
 lme4
 
-lme4 = fitlme(tbl4, 'pitch_400_700~awareness+(1|participant)');
+tbl4 = results(results.pert_magnitude ~= 2, [1 4 5 19 26]);
+tbl4.direction = nan(height(tbl4), 1);
+tbl4(tbl4.pitch_relative > 0, :).direction = ones(height(tbl4(tbl4.pitch_relative > 0, :)), 1);
+tbl4(tbl4.pitch_relative < 0, :).direction = zeros(height(tbl4(tbl4.pitch_relative < 0, :)), 1);
+tbl4.pitch_relative = abs(tbl4.pitch_relative);
+tbl4.has_pert = ones(height(tbl4), 1);
+tbl4(tbl4.pert_magnitude == 0.0001, :).has_pert = zeros(height(tbl4(tbl4.pert_magnitude == 0.0001, :)), 1);
+tbl4(tbl4.has_pert == 0, :) = [];
+lme4 = fitlme(tbl4, 'pitch_relative~awareness*direction+(1|participant)');
 lme4
 
 %lme only with trials that are valid for both auditory and erp analysis
@@ -299,4 +310,6 @@ xlabel('adaptation magnitude (cents)', 'FontSize', 36, 'FontWeight','bold')
 ylabel('Probability', 'FontSize',36, 'FontWeight', 'bold')
 fontsize(gca, 30, 'points')
 
+%histogram of the relative pitch
+hist(results.pitch_relative)
 

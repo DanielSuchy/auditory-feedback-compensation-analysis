@@ -5,6 +5,10 @@ clear;
 all_data = load('/Users/diskuser/analysis/all_data/experiment/all_data_afterpert.mat');
 all_data = all_data.all_data;
 
+%exclude participants
+to_exclude = [2,20,22,25,28];
+all_data(ismember(all_data.participant, to_exclude), :) = [];
+
 %trimmed pitch cointains data within these latencies after pert onset
 reaction_time = 0.060; %60 miliseconds, based on Hafke's paper
 max_duration = 0.800; %the end of each vocalization is usually unstable
@@ -39,7 +43,7 @@ for i = 1:height(all_data)
     %include only pitch around pert start
     time_pitch = time_pitch(time_pitch(:,1) > -0.2 & time_pitch(:,1) < max_duration, :);
  
-    if length(time_pitch(:, 2)) < 97 | sum(abs(time_pitch(:,2)) > 100) > 0 %if vocalization too short or cointains outliers, skip
+    if length(time_pitch(:, 2)) < 97 | sum(abs(time_pitch(:,2)) > 200) > 0 %if vocalization too short or cointains outliers, skip
         disp('outlier')
         continue;
     elseif length(time_pitch) < 99   % some trials have one less sample point in the same interval, depends on e.g. audapter start time (this is ok)
@@ -60,6 +64,13 @@ for i = 1:height(all_data)
     all_data.pitch_minus200_0(i) = mean(pitch_minus200_0(:, 2), 'omitnan');
     pitch_400_700 = time_pitch(time_pitch(:,1) > 0.400 & time_pitch(:,1) < 0.700, :);
     all_data.pitch_400_700(i) = mean(pitch_400_700(:, 2), 'omitnan');
+    pitch_150_350 = time_pitch(time_pitch(:,1) > 0.150 & time_pitch(:,1) < 0.350, :);
+    all_data.pitch_150_350(i) = mean(pitch_150_350(:, 2), 'omitnan');
+    pitch_489_738 = time_pitch(time_pitch(:,1) >= 0.489 & time_pitch(:,1) <= 0.738, :);
+    all_data.pitch_489_738(i) = mean(pitch_489_738(:, 2), 'omitnan');
+
+    %pitch relative to pert. magnitude
+    all_data.pitch_relative(i) = mean((pitch_60_800(:,2) / (trial.pert_magnitude*100)));
 end
 
 %save the data

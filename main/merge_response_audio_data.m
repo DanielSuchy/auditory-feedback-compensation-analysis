@@ -2,7 +2,7 @@
 clear;
 
 %make a list of indivudal data files (one per participant)
-all_files = dir("/Users/diskuser/analysis/all_data/experiment/**/*block1*.mat");
+all_files = dir("/Users/diskuser/analysis/all_data/experiment/**/*block1_PertrurbExpPilot.mat");
 all_response_data = table();
 all_audio_data = [];
 

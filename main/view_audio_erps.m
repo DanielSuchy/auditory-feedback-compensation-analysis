@@ -29,21 +29,19 @@ unaware_cents = horzcat(unaware_trials.pitch{:})';
 
 %% plot average vocalization timecourse
 figure;
-plot(results(1,:).relative_time_points{:} * 1000, mean(alltrial_cents, 'omitnan'), 'LineWidth',3);
-hold on;
+%plot(results(1,:).relative_time_points{:} * 1000, mean(alltrial_cents, 'omitnan'), 'LineWidth',3);
+%hold on;
 plot(results(1,:).relative_time_points{:} * 1000, mean(nopert_cents, 'omitnan'), 'LineWidth',3);
 hold on;
 plot(results(1,:).relative_time_points{:} * 1000, mean(bigpert_cents, 'omitnan'), 'LineWidth',3);
-hold on;
 plot(results(1,:).relative_time_points{:} * 1000, mean(aware_cents, 'omitnan'), 'LineWidth',3);
-hold on;
 plot(results(1,:).relative_time_points{:} * 1000, mean(unaware_cents, 'omitnan'), 'LineWidth',3);
 l = line([0 0],[-10 3]); l.Color = 'b';
 l = line([200 200],[-10 3]); l.Color = 'r';
 title('Time course of vocal adaptation', 'FontSize',30, 'FontWeight','bold')
 xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold')
 ylabel('Mean adaptation magnitude (cents)', 'FontSize',30, 'FontWeight','bold')
-legend('all valid trials', '0-cent trials', '200-cent trials', 'aware threshold tr.', 'unaware threshold tr.')
+legend('0-cent trials', '200-cent trials', 'aware threshold tr.', 'unaware threshold tr.')
 fontsize(gca, 24, 'points');
 
 %% overlap vocalization and ERP timecourse
