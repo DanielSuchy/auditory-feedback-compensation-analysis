@@ -8,7 +8,7 @@
 set_file = [path '/' participant_id '_ica.set'];
 
 EEG = pop_loadset(set_file);
-EEG = pop_resample(EEG, 100); %downsample to 100 Hz for mass univariate analysis
+%EEG = pop_resample(EEG, 100); %downsample to 100 Hz for mass univariate analysis
 %EEG = pop_eegfiltnew(EEG, 0, 40); %low-pass for better graphs
 
 %% Perturbation onset - bigpert vs nopert

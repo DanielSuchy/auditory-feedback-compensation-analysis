@@ -21,7 +21,7 @@ all_data = [all_response_data all_audio_data];
 all_data = removevars(all_data, {'block', 'confidence_response', 'updown_response'});
 all_data = renamevars(all_data, ["ID", "Var9", "OST_worked", 'how_noticeable_response'], ["participant", "audapter_data", "ost_worked", 'awareness']);
 
-%assign correct numbers to participants
+%assign correct numbers to participants (participant 12 was saved incorrectly)
 all_data(all_data.participant == 120, "participant") = table(12);
 
 save('/Users/diskuser/analysis/all_data/experiment/response_audio_data.mat', "all_data", '-v7.3');

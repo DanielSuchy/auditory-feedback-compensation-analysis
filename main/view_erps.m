@@ -335,10 +335,10 @@ xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold')
 ylabel('Voltage (µV)', 'FontSize',30, 'FontWeight','bold')
 l = line([0 0],[-5 5]); l.Color = 'k';
 l = line([-500 1000],[0 0]); l.Color = 'k';
-area([120 180], [2 2], BaseValue=-2, FaceColor='blue', FaceAlpha=0.1)
+area([100 200], [2 2], BaseValue=-2, FaceColor='blue', FaceAlpha=0.1)
 area([300 500], [2 2], BaseValue=-2, FaceColor='red', FaceAlpha=0.1)
 legend('aware', 'unaware')
-fontsize(gca, 24, 'points');
+fontsize(gca, 18, 'points');
 
 aanmean_plot = subplot(2,3,2);
 e1 = errorbar(1, mean(aans_una), std(aans_una) / sqrt(length(aans_una)), 'LineWidth', 5, 'MarkerFaceColor', 'r');
@@ -363,7 +363,7 @@ grid on;
 grid minor;
 xticks([1 2 3 4]);
 xticklabels({'unaware', 'aware 1', 'aware 2', 'aware3'});
-fontsize(gca, 24, 'points');
+fontsize(gca, 18, 'points');
 
 lpmean_plot = subplot(2,3,5);
 e1 = errorbar(1, mean(lps_una), std(lps_una) / sqrt(length(lps_una)), 'LineWidth', 5, 'MarkerFaceColor', 'r');
@@ -388,7 +388,7 @@ grid on;
 grid minor;
 xticks([1 2 3 4]);
 xticklabels({'unaware', 'aware 1', 'aware 2', 'aware3'});
-fontsize(gca, 24, 'points');
+fontsize(gca, 18, 'points');
 
 tvalues = load('/Users/diskuser/analysis/all_data/eeg/tvalues_real_data.mat');
 tvalues = tvalues.t_values;
@@ -396,17 +396,19 @@ tvalues = tvalues.t_values;
 aan_ts = tvalues(1:32,63:69); %120 - 180 ms
 mean_aan = mean(aan_ts, 2);
 aan_scalp = subplot(2,3,3);
-topoplot(mean_aan, eeg.chanlocs);
+topoplot(mean_aan, eeg.chanlocs, 'whitebk', 'on');
 title('AAN - tscores');
-fontsize(gca, 24, 'points');
+fontsize(gca, 18, 'points');
+colorbar;
 
 %scalp maps of t-values for LP
 lp_ts = tvalues(1:32, 81:101);
 mean_lp = mean(lp_ts, 2);
 lp_scalp = subplot(2,3,6);
-topoplot(mean_lp, eeg.chanlocs);
+topoplot(mean_lp, eeg.chanlocs, 'whitebk', 'on');
 title('LP - tscores');
-fontsize(gca, 24, 'points');
+fontsize(gca, 18, 'points');
+colorbar;
 
 %adjust positions of the subplots
 erp_plot.Position = erp_plot.Position + [-0.05 0 0.15 0];
@@ -414,3 +416,54 @@ aanmean_plot.Position = aanmean_plot.Position + [0.1 0 0 0];
 lpmean_plot.Position = lpmean_plot.Position + [0.1 0 0 0];
 aan_scalp.Position = aan_scalp.Position + [0.05 0 0 0];
 lp_scalp.Position = lp_scalp.Position + [0.05 0 0 0];
+
+%% perturbation onset - ratings for no-pert trials
+
+%trials without awareness
+cd('/Users/diskuser/analysis/all_data/eeg/')
+unaware_eegs = dir('**/*_unaware_control_eeg.mat');
+all_unaware_erps = [];
+for i=1:length(unaware_eegs)
+    file = [unaware_eegs(i).folder '/' unaware_eegs(i).name];
+    eeg = load(file);
+    eeg = eeg.erp_data;
+    erps = eeg.data;
+    erps = mean(erps, 3);
+    eeg_times = eeg.times;
+    all_unaware_erps(:,:,i) = erps;
+end
+unaware_erp_mean = mean(all_unaware_erps, 3);
+
+
+%trials with awareness
+cd('/Users/diskuser/analysis/all_data/eeg/')
+aware_eegs = dir('**/*_aware*_control_eeg.mat');
+all_aware_erps = [];
+for i=1:length(aware_eegs)
+    file = [aware_eegs(i).folder '/' aware_eegs(i).name];
+    eeg = load(file);
+    eeg = eeg.erp_data;
+    erps = eeg.data;
+    erps = mean(erps, 3);
+    eeg_times = eeg.times;
+    all_aware_erps(:,:,i) = erps;
+end
+aware_erp_mean = mean(all_aware_erps, 3);
+
+%plot pert erps
+figure;
+plot_channels = [18 22 4 12 26 6 24]; %central electrodes
+plot(eeg_times, mean(aware_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
+hold on
+plot(eeg_times, mean(unaware_erp_mean(plot_channels, :))', 'LineWidth', 3) % 18 = Cz
+xlim([-200 800])
+ylim([-1.5 1.5])
+title('No pert. trials - effect of awareness', 'FontSize',30, 'FontWeight','bold')
+xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold')
+ylabel('Voltage (µV)', 'FontSize',30, 'FontWeight','bold')
+l = line([0 0],[-5 5]); l.Color = 'k';
+l = line([-500 1000],[0 0]); l.Color = 'k';
+area([100 200], [2 2], BaseValue=-2, FaceColor='blue', FaceAlpha=0.1)
+area([300 500], [2 2], BaseValue=-2, FaceColor='red', FaceAlpha=0.1)
+legend('aware', 'unaware')
+fontsize(gca, 24, 'points');

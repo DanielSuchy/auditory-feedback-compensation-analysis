@@ -7,7 +7,6 @@ all_data.meets_2sd_condition = zeros([height(all_data), 1]);
 all_data.mean_f0_during_condition = nan([height(all_data), 1]);
 all_data.difference_in_cents = nan([height(all_data), 1]);
 
-%all_data = all_data(796, :);
 for trial_id = 1:height(all_data)
     %load required variables from the table
     trial = all_data(trial_id, :);

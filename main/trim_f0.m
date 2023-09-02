@@ -1,4 +1,4 @@
-%remove last 200 ms from the F0 signal, these tend to be faulty
+%remove last 300 ms from the F0 signal, these tend to be faulty
 clear;
 
 all_data = load('/Users/diskuser/analysis/all_data/experiment/all_data_f0.mat');

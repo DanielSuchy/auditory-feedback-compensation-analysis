@@ -40,7 +40,7 @@ for i = 1:height(all_data)
 
     %select relevant time windows
     times_erps = [times; mean_erps];
-    aan = times_erps(:,times_erps(1,:) >= 120 & times_erps(1,:) <= 180);
+    aan = times_erps(:,times_erps(1,:) >= 100 & times_erps(1,:) <= 200);
     lp = times_erps(:,times_erps(1,:) >= 300 & times_erps(1,:) <= 500);
 
     %remove times from data structure
@@ -97,7 +97,7 @@ for i = 1:height(all_data)
 
     %select relevant time windows
     times_erps = [times; mean_erps];
-    aan = times_erps(:,times_erps(1,:) >= 120 & times_erps(1,:) <= 180);
+    aan = times_erps(:,times_erps(1,:) >= 100 & times_erps(1,:) <= 200);
     lp = times_erps(:,times_erps(1,:) >= 300 & times_erps(1,:) <= 500);
 
     %remove times from data structure

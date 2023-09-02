@@ -3,8 +3,7 @@ clear;
   
 responses = load('/Users/diskuser/analysis/all_data/experiment/all_data_final.mat');
 responses = responses.all_data;
-responses = responses(:, [1 2 4 5 24 25]);
-responses = unique(responses, 'rows');
+responses = responses(:, [1 2 4 5 19:22]);
 pert_trials = responses(responses.pert_magnitude < 2, :); %& responses.pert_magnitude > 0.0001,:);
 
 %ratio of aware to unaware trials
@@ -17,7 +16,7 @@ mean_percentage_aware = mean(aware_trial_count ./ total_trial_count)
 
 
 actual_threshold = aware_trial_count ./ total_trial_count;
-attempted_threshold = [50 75 75 75 75 repmat(65, [1 35-5])]';
+attempted_threshold = [50 75 75 75 repmat(65, [1 30-4])]';
 magnitudes = unique(pert_trials.pert_magnitude, 'stable');
 result = table(participant, aware_trial_count, total_trial_count, actual_threshold, attempted_threshold, magnitudes);
 result
@@ -59,50 +58,49 @@ for participant_id=1:participants_count
     pfa = sum(participant.fa) / sum(participant.has_stimulus == 0);
     dprime = norminv(phit) - norminv(pfa);
     criterion = norminv(pfa);
-    participant(participant.pert_magnitude == 0.0001, :) = [];
-    pitch_489_738 = mean(participant.pitch_489_738);
-    unaware = participant(participant.awareness == 0, :);
-    pitch_489_738_unaware = mean(unaware.pitch_489_738);
 
-    pitch_150_350 = mean(participant.pitch_150_350);
-    pitch_150_350_unaware = mean(unaware.pitch_150_350);
+
+     participant(participant.pert_magnitude == 0.0001, :) = [];
+     unaware = participant(participant.awareness == 0, :);
+     pitch_100_200 = mean(participant.pitch_100_200);
+     pitch_300_500 = mean(participant.pitch_300_500);
+     pitch_tfce = mean(participant.pitch_tfce);
+
     pertsize = participant.pert_magnitude(1);
-    sd_table = [sd_table; table(participant_id, pertsize, dprime, criterion, pitch_489_738, ...
-        pitch_489_738_unaware, pitch_150_350, pitch_150_350_unaware)];
+    sd_table = [sd_table; table(participant_id, pertsize, dprime, criterion, pitch_100_200, ...
+        pitch_300_500, pitch_tfce)];
 end
 
-%does pertsize correlate with dprime?
-corrcoef(sd_table.dprime, sd_table.pertsize)
-corrcoef(sd_table.criterion, sd_table.pertsize)
+sd_table(sd_table.participant_id == 23, :) = [];
+
+%does pertsize correlate with sdt measures?
+%early time window
+lm1 = fitlm(sd_table, 'pitch_100_200 ~ dprime');
+lm1
+lm2 = fitlm(sd_table, 'pitch_100_200 ~ criterion');
+lm2
 
 %late time window
-sd_table(isnan(sd_table.pitch_489_738_unaware), :) = [];
-sd_table(sd_table.pitch_489_738_unaware == 0, :) = [];
-scatter(sd_table.dprime, sd_table.pitch_489_738_unaware)
-scatter(sd_table.criterion, sd_table.pitch_489_738_unaware)
-corrcoef(sd_table.dprime, sd_table.pitch_489_738_unaware)
-corrcoef(sd_table.criterion, sd_table.pitch_489_738_unaware)
-lm = fitlm(sd_table,'pitch_489_738~dprime');
-lm
-lm = fitlm(sd_table,'pitch_489_738~criterion');
-lm
+lm3 = fitlm(sd_table, 'pitch_300_500 ~ dprime');
+lm3
+lm4 = fitlm(sd_table, 'pitch_300_500 ~ criterion');
+lm4
 
-%early time window
-corrcoef(sd_table.dprime, sd_table.pitch_150_350_unaware)
-corrcoef(sd_table.criterion, sd_table.pitch_150_350_unaware)
-lm = fitlm(sd_table,'pitch_150_350~dprime');
-lm
-lm = fitlm(sd_table,'pitch_150_350~criterion');
-lm
+%tfce time window
+lm5 = fitlm(sd_table, 'pitch_tfce ~ dprime');
+lm5
+lm6 = fitlm(sd_table, 'pitch_tfce ~ criterion');
+lm6
 
-%more complex models
-lm = fitlm(sd_table,'pitch_489_738~dprime*pertsize');
-lm
-lm = fitlm(sd_table,'pitch_150_350~dprime*pertsize');
-lm
-lm = fitlme(sd_table,'pitch_489_738~dprime+(1|pertsize)');
-lm
-lm = fitlme(sd_table,'pitch_150_350~dprime+(1|pertsize)');
-lm
+% plot all regressions in a grid
+figure;
+subplot(2,2,1);
+plot(lm3);
+subplot(2,2,2);
+plot(lm4);
+subplot(2,2,3);
+plot(lm5);
+subplot(2,2,4);
+plot(lm6);
 
 

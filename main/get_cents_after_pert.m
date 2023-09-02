@@ -56,21 +56,12 @@ for i = 1:height(all_data)
     all_data.pitch{i} = time_pitch(:, 2);
     pitch_60_800 = time_pitch(time_pitch(:,1) > 0.06, :);
     all_data.pitch_60_800(i) = mean(pitch_60_800(:, 2), 'omitnan');
-    pitch_120_180 = time_pitch(time_pitch(:,1) > 0.120 & time_pitch(:,1) < 0.180, :);
-    all_data.pitch_120_180(i) = mean(pitch_120_180(:, 2), 'omitnan');
-    pitch_300_500 = time_pitch(time_pitch(:,1) > 0.300 & time_pitch(:,1) < 0.500, :);
+    pitch_tfce = time_pitch(time_pitch(:,1) > 0.494 & time_pitch(:,1) < 0.694, :);
+    all_data.pitch_tfce(i) = mean(pitch_tfce(:, 2), 'omitnan');
+    pitch_100_200 = time_pitch(time_pitch(:,1) >= 0.1 & time_pitch(:,1) <= 0.2, :);
+    all_data.pitch_100_200(i) = mean(pitch_100_200(:, 2), 'omitnan');
+    pitch_300_500 = time_pitch(time_pitch(:,1) >= 0.3 & time_pitch(:,1) <= 0.5, :);
     all_data.pitch_300_500(i) = mean(pitch_300_500(:, 2), 'omitnan');
-    pitch_minus200_0 = time_pitch(time_pitch(:,1) > -0.200 & time_pitch(:,1) < 0, :);
-    all_data.pitch_minus200_0(i) = mean(pitch_minus200_0(:, 2), 'omitnan');
-    pitch_400_700 = time_pitch(time_pitch(:,1) > 0.400 & time_pitch(:,1) < 0.700, :);
-    all_data.pitch_400_700(i) = mean(pitch_400_700(:, 2), 'omitnan');
-    pitch_150_350 = time_pitch(time_pitch(:,1) > 0.150 & time_pitch(:,1) < 0.350, :);
-    all_data.pitch_150_350(i) = mean(pitch_150_350(:, 2), 'omitnan');
-    pitch_489_738 = time_pitch(time_pitch(:,1) >= 0.489 & time_pitch(:,1) <= 0.738, :);
-    all_data.pitch_489_738(i) = mean(pitch_489_738(:, 2), 'omitnan');
-
-    %pitch relative to pert. magnitude
-    all_data.pitch_relative(i) = mean((pitch_60_800(:,2) / (trial.pert_magnitude*100)));
 end
 
 %save the data

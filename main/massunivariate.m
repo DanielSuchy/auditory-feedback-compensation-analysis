@@ -29,7 +29,7 @@ figure; imagesc(times, 1:32, t_values)
 EEG = pop_loadset('/Users/diskuser/analysis/all_data/eeg/S17/S17_ica.set');
 [neighbours,channeighbstructmat] = limo_get_channeighbstructmat(EEG, 60);
 tfce_out = limo_tfce(2, t_values, channeighbstructmat);
-figure; imagesc(times, 1:32, tfce_out)
+figure; imagesc(EEG.times, 1:32, tfce_out)
 
 
 save("tvalues_real_data.mat", "t_values");
@@ -102,8 +102,8 @@ prctile(all_t_scores, 95, 'all')
 %% mass univariate analysis of vocal data
 all_data = load('/Users/diskuser/analysis/all_data/experiment/all_data_final.mat');
 all_data = all_data.all_data;
-all_data = all_data(all_data.pert_magnitude < 2 & all_data.pert_magnitude > 0.0001, :);
-all_data(all_data.pitch_60_800 == 0, :) = [];
+all_data = all_data(all_data.pert_magnitude == 0.0001, :);
+all_data(all_data.pitch_tfce == 0, :) = [];
 mu_data = all_data(:, [1 5 18]); %data relevant for mass univariate analysis
 
 parfor sample_i=1:100
@@ -148,8 +148,8 @@ for perm_i=1:permutations
     disp(['permutation: ' num2str(perm_i)])
     fake_t_values(perm_i, :) = t_values;
 end
-save("real_tvalues.mat", "real_t_values");
-save("fake_tvalues.mat", "fake_t_values");
+save("real_tvalues_nopert.mat", "real_t_values");
+save("fake_tvalues_nopert.mat", "fake_t_values");
 
 tmax = max(fake_t_values, [], 2);
 tmax = abs(tmax);
@@ -172,6 +172,33 @@ real_tfce > cutoff
 times = all_data(1, :).relative_time_points;
 times = times{1};
 times(real_tfce > cutoff)
-plot(times', real_tfce)
+
+%plot TFCE results
+figure;
+subplot(1,2,2);
+plot(times' * 1000, real_tfce, LineWidth=5);
+%hold on;
+%area([min(times(real_tfce > cutoff)) * 1000 max(times(real_tfce > cutoff)) * 1000], [25 25], BaseValue=0, FaceColor='k', FaceAlpha=0.1);
+title('Effect of awareness on vocalization (TFCE)', 'FontSize',30, 'FontWeight','bold');
+xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold');
+ylabel('TFCE score', 'FontSize',30, 'FontWeight','bold');
+yline(cutoff);
+xline(0);
+fontsize(gca, 24, 'points');
+
+subplot(1,2,1);
+plot(results(1,:).relative_time_points{:} * 1000, mean(nopert_cents, 'omitnan'), 'LineWidth',3);
 hold on;
-plot(times', (real_tfce > cutoff) * 3 );
+plot(results(1,:).relative_time_points{:} * 1000, mean(bigpert_cents, 'omitnan'), 'LineWidth',3);
+plot(results(1,:).relative_time_points{:} * 1000, mean(aware_cents, 'omitnan'), 'LineWidth',3);
+plot(results(1,:).relative_time_points{:} * 1000, mean(unaware_cents, 'omitnan'), 'LineWidth',3);
+l = line([0 0],[-10 10]); l.Color='k';
+title('Time course of vocal adaptation', 'FontSize',30, 'FontWeight','bold')
+xlabel('Time (ms)', 'FontSize',30, 'FontWeight','bold')
+ylabel('Mean adaptation magnitude (cents)', 'FontSize',30, 'FontWeight','bold')
+lgd = legend('0-cent trials', '200-cent trials', 'aware threshold tr.', 'unaware threshold tr.', Location='northwest');
+lgd.AutoUpdate = 'off';
+lgd.FontSize = 20;
+fontsize(gca, 24, 'points');
+yline(0);
+ylim([-8 6]);
